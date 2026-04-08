@@ -335,8 +335,12 @@
     .no-break { page-break-inside: avoid; }
     .speichern-btn { display: none !important; }
     textarea { border: 1px solid #ccc !important; background: #fafafa !important; resize: none; }
-    .name-input { border: none; border-bottom: 1px solid #444; background: transparent; }
+    textarea::placeholder { color: transparent !important; }
+    input.name-input { border: none; border-bottom: 1.5px solid #444; background: transparent; }
+    input.name-input::placeholder { color: transparent !important; }
     [contenteditable] { border: none !important; background: transparent !important; }
+    .lernziele { margin-bottom: 0; }
+    .overview { margin-bottom: 10px; }
   }
 
   /* SCREEN-MODUS */
@@ -603,9 +607,9 @@
       <strong>c)</strong> $n + 7$ für $n = 5$
     </div>
     <div class="teilaufgaben">
-      <div class="teilaufgabe"><div class="teilaufgabe-label">a)</div><textarea class="antwort-input" placeholder="Rechenweg …"></textarea></div>
-      <div class="teilaufgabe"><div class="teilaufgabe-label">b)</div><textarea class="antwort-input" placeholder="Rechenweg …"></textarea></div>
-      <div class="teilaufgabe"><div class="teilaufgabe-label">c)</div><textarea class="antwort-input" placeholder="Rechenweg …"></textarea></div>
+      <div class="teilaufgabe"><div class="teilaufgabe-label">a)</div><textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea></div>
+      <div class="teilaufgabe"><div class="teilaufgabe-label">b)</div><textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea></div>
+      <div class="teilaufgabe"><div class="teilaufgabe-label">c)</div><textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea></div>
     </div>
   </div>
 </div>
@@ -620,9 +624,9 @@
       <strong>c)</strong> $2a - 1$ für $a = 10$
     </div>
     <div class="teilaufgaben">
-      <div class="teilaufgabe"><div class="teilaufgabe-label">a)</div><textarea class="antwort-input" placeholder="Rechenweg …"></textarea></div>
-      <div class="teilaufgabe"><div class="teilaufgabe-label">b)</div><textarea class="antwort-input" placeholder="Rechenweg …"></textarea></div>
-      <div class="teilaufgabe"><div class="teilaufgabe-label">c)</div><textarea class="antwort-input" placeholder="Rechenweg …"></textarea></div>
+      <div class="teilaufgabe"><div class="teilaufgabe-label">a)</div><textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea></div>
+      <div class="teilaufgabe"><div class="teilaufgabe-label">b)</div><textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea></div>
+      <div class="teilaufgabe"><div class="teilaufgabe-label">c)</div><textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea></div>
     </div>
   </div>
 </div>
@@ -637,9 +641,9 @@
       <strong>c)</strong> $4(a + 1)$ für $a = 2$
     </div>
     <div class="teilaufgaben">
-      <div class="teilaufgabe"><div class="teilaufgabe-label">a)</div><textarea class="antwort-input" placeholder="Rechenweg …"></textarea></div>
-      <div class="teilaufgabe"><div class="teilaufgabe-label">b)</div><textarea class="antwort-input" placeholder="Rechenweg …"></textarea></div>
-      <div class="teilaufgabe"><div class="teilaufgabe-label">c)</div><textarea class="antwort-input" placeholder="Rechenweg …"></textarea></div>
+      <div class="teilaufgabe"><div class="teilaufgabe-label">a)</div><textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea></div>
+      <div class="teilaufgabe"><div class="teilaufgabe-label">b)</div><textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea></div>
+      <div class="teilaufgabe"><div class="teilaufgabe-label">c)</div><textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea></div>
     </div>
   </div>
 </div>
@@ -683,9 +687,9 @@
     </div>
     <div class="aufgabe-hinweis">Hinweis: $(-3) + 4 = 1$ — negative Zahlen mit Klammern schreiben.</div>
     <div class="teilaufgaben">
-      <div class="teilaufgabe"><div class="teilaufgabe-label">a)</div><textarea class="antwort-input" placeholder="Rechenweg …"></textarea></div>
-      <div class="teilaufgabe"><div class="teilaufgabe-label">b)</div><textarea class="antwort-input" placeholder="Rechenweg …"></textarea></div>
-      <div class="teilaufgabe"><div class="teilaufgabe-label">c)</div><textarea class="antwort-input" placeholder="Rechenweg …"></textarea></div>
+      <div class="teilaufgabe"><div class="teilaufgabe-label">a)</div><textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea></div>
+      <div class="teilaufgabe"><div class="teilaufgabe-label">b)</div><textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea></div>
+      <div class="teilaufgabe"><div class="teilaufgabe-label">c)</div><textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea></div>
     </div>
   </div>
 </div>
@@ -730,7 +734,7 @@
       Ein Buch kostet 9 Euro. Stelle einen Term auf für den Gesamtpreis von $n$ Büchern.
     </div>
     <div class="aufgabe-hinweis">Beantworte: Welche Größe ändert sich? Was bleibt fest?</div>
-    <textarea class="antwort-input klein" placeholder="Rechenweg hier eintippen …"></textarea>
+    <textarea class="antwort-input klein" placeholder="Lösung mit Rechenweg hier eintippen …"></textarea>
   </div>
 </div>
 
@@ -741,7 +745,7 @@
       Mia hat $m$ Euro Taschengeld. Sie gibt 4 Euro für ein Heft aus.
       Stelle einen Term auf für ihr verbleibendes Geld.
     </div>
-    <textarea class="antwort-input klein" placeholder="Rechenweg hier eintippen …"></textarea>
+    <textarea class="antwort-input klein" placeholder="Lösung mit Rechenweg hier eintippen …"></textarea>
   </div>
 </div>
 
@@ -753,7 +757,7 @@
       Stelle einen Term auf für den Umfang des Rechtecks.
     </div>
     <div class="aufgabe-hinweis">Hinweis: Umfang Rechteck = $2 \cdot (\text{Länge} + \text{Breite})$</div>
-    <textarea class="antwort-input klein" placeholder="Rechenweg hier eintippen …"></textarea>
+    <textarea class="antwort-input klein" placeholder="Lösung mit Rechenweg hier eintippen …"></textarea>
   </div>
 </div>
 
@@ -764,7 +768,7 @@
       Ein Zug fährt mit einer Geschwindigkeit von $v$ km/h. Er ist bereits 30 km gefahren.
       Stelle einen Term auf für die Gesamtstrecke nach weiteren $t$ Stunden Fahrt.
     </div>
-    <textarea class="antwort-input klein" placeholder="Rechenweg hier eintippen …"></textarea>
+    <textarea class="antwort-input klein" placeholder="Lösung mit Rechenweg hier eintippen …"></textarea>
   </div>
 </div>
 
@@ -776,7 +780,7 @@
       Stelle einen Term auf für den Betrag, den jeder zahlen muss.
     </div>
     <div class="aufgabe-hinweis">Achtung: Wie viele Personen zahlen insgesamt? Leon <em>und</em> seine $n$ Freunde.</div>
-    <textarea class="antwort-input klein" placeholder="Rechenweg hier eintippen …"></textarea>
+    <textarea class="antwort-input klein" placeholder="Lösung mit Rechenweg hier eintippen …"></textarea>
   </div>
 </div>
 
@@ -787,7 +791,7 @@
       Erfinde selbst eine Alltagssituation, die durch den Term $5a + 3$ beschrieben werden kann.
       Schreibe die Situation als vollständigen Satz auf und erkläre, wofür $a$ steht.
     </div>
-    <textarea class="antwort-input gross" placeholder="Rechenweg hier eintippen …"></textarea>
+    <textarea class="antwort-input gross" placeholder="Lösung mit Rechenweg hier eintippen …"></textarea>
   </div>
 </div>
 
@@ -872,8 +876,8 @@
     </div>
     <div class="aufgabe-hinweis">Erst vereinfachen, dann Wert einsetzen!</div>
     <div class="teilaufgaben">
-      <div class="teilaufgabe"><div class="teilaufgabe-label">a)</div><textarea class="antwort-input" placeholder="Rechenweg …"></textarea></div>
-      <div class="teilaufgabe"><div class="teilaufgabe-label">b)</div><textarea class="antwort-input" placeholder="Rechenweg …"></textarea></div>
+      <div class="teilaufgabe"><div class="teilaufgabe-label">a)</div><textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea></div>
+      <div class="teilaufgabe"><div class="teilaufgabe-label">b)</div><textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea></div>
     </div>
   </div>
 </div>
@@ -891,7 +895,7 @@
         Stelle einen Term auf für Lisas Rechenvorgang (nenne die gedachte Zahl $x$).
         Vereinfache den Term, wenn möglich, und erkläre auf Deutsch, was das Ergebnis bedeutet.
       </div>
-      <textarea class="antwort-input xl" placeholder="Rechenweg hier eintippen …"></textarea>
+      <textarea class="antwort-input xl" placeholder="Lösung mit Rechenweg hier eintippen …"></textarea>
     </div>
   </div>
 </div>
