@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heimarbeit – Mathe 8D – Lineare Funktionen</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://tikzjax.com/v1/fonts.css">
+  <script src="https://tikzjax.com/v1/tikzjax.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 11pt;
+      line-height: 1.55;
+      color: #111;
+      background: #eee;
+    }
+
+    @media screen {
+      body { max-width: 860px; margin: 0 auto; padding: 24px 24px 80px; }
+    }
+
+    @media print {
+      body { background: #fff; padding: 0; max-width: 100%; }
+      .speichern-btn { display: none !important; }
+      textarea { border: 1px solid #ccc !important; background: #fafafa !important; resize: none; }
+      textarea::placeholder { color: transparent !important; }
+      input.name-input::placeholder { color: transparent !important; }
+      .page-card { box-shadow: none; padding: 0; margin: 0; }
+      .aufgabe-block { page-break-inside: avoid; }
+      .section-block { page-break-inside: avoid; }
+    }
+
+    @page { size: A4; margin: 15mm 18mm; }
+
+    .page-card {
+      background: #fff;
+      padding: 32px 36px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+      margin-bottom: 24px;
+    }
+
+    .header-meta {
+      font-size: 9pt; color: #666;
+      text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px;
+    }
+    .header-title { font-size: 18pt; font-weight: 700; color: #222; margin-bottom: 2px; }
+    .header-subtitle { font-size: 11pt; color: #555; margin-bottom: 20px; }
+    .header-divider { border: none; border-top: 2px solid #444; margin-bottom: 20px; }
+
+    .name-row { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+    .name-field { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 200px; }
+    .name-field label { font-size: 10pt; color: #555; white-space: nowrap; }
+    input.name-input {
+      flex: 1; border: none; border-bottom: 1.5px solid #888;
+      padding: 4px 2px; font-family: inherit; font-size: 11pt;
+      color: #111; outline: none; background: transparent;
+    }
+
+    .ablauf-table { width: 100%; border-collapse: collapse; font-size: 10pt; margin-bottom: 24px; }
+    .ablauf-table th { background: #555; color: #fff; padding: 6px 10px; text-align: left; font-weight: 600; }
+    .ablauf-table td { padding: 5px 10px; border-bottom: 1px solid #ddd; vertical-align: top; }
+    .ablauf-table tr:last-child td { border-bottom: none; }
+    .ablauf-table .pause-row td { background: #f5f5f5; font-style: italic; color: #555; }
+
+    .lernziele-box { border: 1px solid #bbb; padding: 12px 16px; margin-bottom: 24px; background: #fafafa; }
+    .lernziele-box h3 { font-size: 10pt; font-weight: 700; color: #555; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+    .lernziele-box ul { list-style: none; padding: 0; }
+    .lernziele-box ul li::before { content: '■ '; font-size: 8pt; color: #555; }
+    .lernziele-box ul li { margin-bottom: 3px; font-size: 10pt; }
+
+    .section-header {
+      background: #555; color: #fff;
+      padding: 7px 14px; font-size: 12pt; font-weight: 700;
+      margin: 28px 0 16px; letter-spacing: 0.02em;
+    }
+    .section-header .section-time { font-size: 9pt; font-weight: 400; opacity: 0.85; margin-left: 8px; }
+
+    .erklaerung { background: #fafafa; border-left: 4px solid #999; padding: 10px 14px; margin-bottom: 14px; font-size: 10.5pt; }
+    .erklaerung p { margin-bottom: 6px; }
+    .erklaerung p:last-child { margin-bottom: 0; }
+
+    .merke-box { border-left: 4px solid #555; background: #f5f5f5; padding: 10px 14px; margin: 14px 0; }
+    .merke-box .merke-label { font-size: 9pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #555; margin-bottom: 5px; }
+
+    .beispiel-box { border: 1px dashed #bbb; background: #fefefe; padding: 8px 12px; margin: 8px 0 12px; font-size: 10pt; color: #444; }
+    .beispiel-box .bsp-label { font-weight: 700; color: #666; font-size: 9pt; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+
+    .aufgabe-block { margin-bottom: 20px; }
+    .aufgabe-nr { font-weight: 700; font-size: 11pt; margin-bottom: 4px; }
+    .aufgabe-text { margin-bottom: 8px; font-size: 11pt; }
+
+    textarea.antwort-input {
+      width: 100%; padding: 8px 10px;
+      border: 1.5px solid #bbb; background: #fff;
+      font-family: inherit; font-size: 11pt; color: #111;
+      resize: vertical; box-sizing: border-box;
+    }
+    textarea.antwort-input.klein { min-height: 50px; }
+    textarea.antwort-input.gross { min-height: 110px; }
+    textarea.antwort-input.xl { min-height: 150px; }
+    textarea.antwort-input:not(.klein):not(.gross):not(.xl) { min-height: 75px; }
+
+    .teilaufgaben { display: flex; flex-direction: column; gap: 8px; }
+    .teilaufgabe { display: flex; align-items: flex-start; gap: 8px; }
+    .teilaufgabe-label { font-weight: 700; min-width: 22px; padding-top: 9px; font-size: 11pt; color: #333; }
+    .teilaufgabe textarea { flex: 1; }
+
+    /* Koordinatensystem-Container */
+    .koordinatensystem {
+      display: flex;
+      justify-content: center;
+      margin: 12px 0;
+      overflow: hidden;
+    }
+    .koordinatensystem svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* Zwei Koordinatensysteme nebeneinander */
+    .ks-row {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 12px 0;
+    }
+    .ks-col {
+      flex: 1;
+      min-width: 220px;
+      max-width: 340px;
+    }
+    .ks-col p {
+      font-size: 10pt;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    /* Zuordnungs-Tabelle */
+    .aufgaben-tabelle {
+      width: 100%; border-collapse: collapse; margin: 10px 0 12px; font-size: 10.5pt;
+    }
+    .aufgaben-tabelle th { background: #666; color: #fff; padding: 6px 10px; text-align: left; font-weight: 600; }
+    .aufgaben-tabelle td { border: 1px solid #ccc; padding: 6px 10px; vertical-align: middle; }
+    .aufgaben-tabelle td[contenteditable="true"] { background: #fafafa; min-width: 80px; text-align: center; }
+    .aufgaben-tabelle td[contenteditable="true"]:focus { outline: 2px solid #888; background: #fff; }
+
+    .pause-box {
+      border: 2px dashed #aaa; text-align: center;
+      padding: 14px 20px; margin: 28px 0; color: #555; font-size: 11pt;
+    }
+    .pause-box strong { display: block; font-size: 12pt; margin-bottom: 4px; }
+
+    .bonus-header { background: #888; color: #fff; padding: 7px 14px; font-size: 11pt; font-weight: 700; margin: 28px 0 14px; }
+
+    .footer-fixed {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: #fff; border-top: 1px solid #ccc;
+      padding: 5px 36px; font-size: 8.5pt; color: #777;
+      display: flex; justify-content: space-between; z-index: 100;
+    }
+
+    .speichern-btn {
+      position: fixed; bottom: 28px; right: 28px;
+      background: #444; color: #fff; border: none;
+      padding: 14px 22px; font-size: 11pt; font-weight: 600;
+      cursor: pointer; z-index: 200; font-family: inherit;
+    }
+    .speichern-btn:hover { background: #222; }
+
+    p { margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+
+<div class="page-card">
+
+  <div class="header-meta">Mathematik &nbsp;·&nbsp; Klasse 8D &nbsp;·&nbsp; Heimarbeit &nbsp;·&nbsp; 09. April 2026</div>
+  <div class="header-title">Lineare Funktionen</div>
+  <div class="header-subtitle">Wiederholung &nbsp;·&nbsp; Graph mit Steigungsdreieck &nbsp;·&nbsp; Gleichung aus Graph &nbsp;·&nbsp; Nullstelle</div>
+  <hr class="header-divider">
+
+  <div class="name-row">
+    <div class="name-field">
+      <label>Name:</label>
+      <input type="text" class="name-input" placeholder="Dein Name">
+    </div>
+    <div class="name-field">
+      <label>Datum:</label>
+      <input type="text" class="name-input" placeholder="09.04.2026">
+    </div>
+  </div>
+
+  <table class="ablauf-table">
+    <thead>
+      <tr><th>Teil</th><th>Inhalt</th><th>Dauer</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><strong>A</strong></td><td>Wiederholung: $m$ und $n$ ablesen, Punkte prüfen</td><td>ca. 15 Min</td></tr>
+      <tr><td><strong>B</strong></td><td>Graph zeichnen mit dem Steigungsdreieck</td><td>ca. 20 Min</td></tr>
+      <tr class="pause-row"><td>—</td><td>Pause: Aufstehen, Fenster auf, kurz bewegen</td><td>5 Min</td></tr>
+      <tr><td><strong>C</strong></td><td>Funktionsgleichung aus dem Graph aufstellen</td><td>ca. 25 Min</td></tr>
+      <tr><td><strong>D</strong></td><td>Neu: Nullstelle berechnen</td><td>ca. 15 Min</td></tr>
+      <tr><td><strong>Bonus</strong></td><td>Freiwillig: Parallele und schneidende Geraden</td><td>offen</td></tr>
+    </tbody>
+  </table>
+
+  <div class="lernziele-box">
+    <h3>Das kannst du nach dieser Stunde</h3>
+    <ul>
+      <li>$m$ und $n$ aus einer Funktionsgleichung $y = m \cdot x + n$ direkt ablesen</li>
+      <li>den Graphen einer linearen Funktion mit dem Steigungsdreieck zeichnen</li>
+      <li>aus einem Graphen die Funktionsgleichung aufstellen</li>
+      <li>die Nullstelle einer linearen Funktion berechnen</li>
+    </ul>
+  </div>
+
+  <!-- ═══ TEIL A ═══ -->
+  <div class="section-header">Teil A — Wiederholung<span class="section-time">ca. 15 Minuten</span></div>
+
+  <div class="erklaerung">
+    <p>Wir wiederholen kurz das Wichtigste aus der letzten Stunde. Löse die Aufgaben ohne Wertetabelle — direkt aus dem Kopf.</p>
+  </div>
+
+  <div class="aufgabe-block">
+    <div class="aufgabe-nr">Aufgabe A1 — $m$ und $n$ ablesen</div>
+    <div class="aufgabe-text">Lies für jede Funktionsgleichung die Steigung $m$ und den y-Achsenabschnitt $n$ ab. Gib außerdem an, ob die Gerade steigt, fällt oder waagerecht verläuft.</div>
+    <table class="aufgaben-tabelle">
+      <thead>
+        <tr><th>Funktionsgleichung</th><th>$m$</th><th>$n$</th><th>steigt / fällt / waagerecht</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>$y = 3x - 2$</td>
+          <td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td>
+        </tr>
+        <tr>
+          <td>$y = -\frac{1}{2}x + 4$</td>
+          <td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td>
+        </tr>
+        <tr>
+          <td>$y = x$</td>
+          <td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td>
+        </tr>
+        <tr>
+          <td>$y = -5$</td>
+          <td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td>
+        </tr>
+        <tr>
+          <td>$y = \frac{2}{3}x - 1$</td>
+          <td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="aufgabe-block">
+    <div class="aufgabe-nr">Aufgabe A2 — Punkte prüfen</div>
+    <div class="aufgabe-text">Überprüfe rechnerisch, ob die Punkte auf dem Graphen von $y = 2x - 3$ liegen. Zeige deinen Rechenweg.</div>
+    <div class="teilaufgaben">
+      <div class="teilaufgabe">
+        <div class="teilaufgabe-label">a)</div>
+        <textarea class="antwort-input klein" placeholder="Lösung mit Rechenweg …"></textarea>
+      </div>
+    </div>
+    <div class="erklaerung" style="font-size:10pt; margin: 6px 0;">$P(2 \mid 1)$</div>
+    <div class="teilaufgaben">
+      <div class="teilaufgabe">
+        <div class="teilaufgabe-label">b)</div>
+        <textarea class="antwort-input klein" placeholder="Lösung mit Rechenweg …"></textarea>
+      </div>
+    </div>
+    <div class="erklaerung" style="font-size:10pt; margin: 6px 0;">$Q(-1 \mid -5)$</div>
+    <div class="teilaufgaben">
+      <div class="teilaufgabe">
+        <div class="teilaufgabe-label">c)</div>
+        <textarea class="antwort-input klein" placeholder="Lösung mit Rechenweg …"></textarea>
+      </div>
+    </div>
+    <div class="erklaerung" style="font-size:10pt; margin: 6px 0;">$R(0 \mid -3)$</div>
+  </div>
+
+  <!-- ═══ TEIL B ═══ -->
+  <div class="section-header">Teil B — Graph mit dem Steigungsdreieck zeichnen<span class="section-time">ca. 20 Minuten</span></div>
+
+  <div class="erklaerung">
+    <p><strong>Das Steigungsdreieck</strong> ist eine schnellere Methode als die Wertetabelle. Du brauchst nur zwei Dinge zu wissen: den <strong>Startpunkt</strong> (y-Achsenabschnitt) und die <strong>Steigung</strong> $m$.</p>
+    <p><strong>Vorgehen in 3 Schritten:</strong></p>
+    <ol style="margin-left: 18px; margin-top: 4px;">
+      <li>Startpunkt einzeichnen: Der Punkt $(0 \mid n)$ liegt auf der y-Achse.</li>
+      <li>Steigungsdreieck anlegen: Bei $m = \frac{\Delta y}{\Delta x}$ gehst du $\Delta x$ Schritte nach rechts und $\Delta y$ Schritte nach oben (bei negativem $m$ nach unten).</li>
+      <li>Gerade durch beide Punkte ziehen (und verlängern).</li>
+    </ol>
+  </div>
+
+  <div class="beispiel-box">
+    <div class="bsp-label">Beispiel: $y = \frac{1}{2}x + 1$</div>
+    <p>Startpunkt: $(0 \mid 1)$ — liegt bei $y = 1$ auf der y-Achse.</p>
+    <p>Steigung: $m = \frac{1}{2}$ — also 2 Schritte nach rechts, 1 Schritt nach oben → zweiter Punkt $(2 \mid 2)$.</p>
+    <p>Gerade durch $(0\mid1)$ und $(2\mid2)$ zeichnen.</p>
+  </div>
+
+  <div class="koordinatensystem">
+    <script type="text/tikz">
+\begin{tikzpicture}[scale=0.75]
+  \draw[gray!30, very thin] (-5,-4) grid (5,5);
+  \draw[->, thick] (-5.5,0) -- (5.5,0) node[right] {$x$};
+  \draw[->, thick] (0,-4.5) -- (0,5.5) node[above] {$y$};
+  \foreach \x in {-5,-4,...,-1,1,2,...,5}
+    \draw (\x,0.1) -- (\x,-0.1) node[below, font=\footnotesize] {$\x$};
+  \foreach \y in {-4,-3,...,-1,1,2,...,5}
+    \draw (0.1,\y) -- (-0.1,\y) node[left, font=\footnotesize] {$\y$};
+  \draw[blue, thick, domain=-5:5] plot (\x, {0.5*\x + 1});
+  \node[blue, above right, font=\small] at (3, 2.5) {$y = \frac{1}{2}x + 1$};
+  \fill[blue] (0,1) circle (2.5pt);
+  \node[blue, left, font=\footnotesize] at (-0.15, 1) {$(0|1)$};
+  \draw[red, dashed, thick] (0,1) -- (2,1) -- (2,2);
+  \node[red, below, font=\footnotesize] at (1, 1) {$\Delta x = 2$};
+  \node[red, right, font=\footnotesize] at (2, 1.5) {$\Delta y = 1$};
+  \fill[red] (2,2) circle (2pt);
+\end{tikzpicture}
+    </script>
+  </div>
+
+  <div class="merke-box">
+    <div class="merke-label">Merke — Steigungsdreieck</div>
+    <p style="margin-bottom: 4px;">Steigung $m = \dfrac{\Delta y}{\Delta x}$ &nbsp;→&nbsp; $\Delta x$ Schritte rechts, $\Delta y$ Schritte hoch (oder runter bei negativem $m$).</p>
+    <p class="mb0">Bei $m = \frac{2}{3}$: 3 rechts, 2 hoch. &nbsp; Bei $m = -2 = \frac{-2}{1}$: 1 rechts, 2 runter.</p>
+  </div>
+
+  <div class="aufgabe-block">
+    <div class="aufgabe-nr">Aufgabe B1 — Graph mit Steigungsdreieck zeichnen</div>
+    <div class="aufgabe-text">Zeichne die folgenden Funktionen in die Koordinatensysteme ein. Verwende das Steigungsdreieck (keine Wertetabelle!). Markiere den Startpunkt und das Steigungsdreieck.</div>
+
+    <div class="ks-row">
+      <div class="ks-col">
+        <p>a) $y = 2x - 1$</p>
+        <div class="koordinatensystem">
+          <script type="text/tikz">
+\begin{tikzpicture}[scale=0.62]
+  \draw[gray!30, very thin] (-5,-5) grid (5,5);
+  \draw[->, thick] (-5.5,0) -- (5.5,0) node[right] {$x$};
+  \draw[->, thick] (0,-5.5) -- (0,5.5) node[above] {$y$};
+  \foreach \x in {-5,-4,...,-1,1,2,...,5}
+    \draw (\x,0.12) -- (\x,-0.12) node[below, font=\tiny] {$\x$};
+  \foreach \y in {-5,-4,...,-1,1,2,...,5}
+    \draw (0.12,\y) -- (-0.12,\y) node[left, font=\tiny] {$\y$};
+\end{tikzpicture}
+          </script>
+        </div>
+        <textarea class="antwort-input klein" placeholder="Startpunkt: ( | )   Zweiter Punkt: ( | )"></textarea>
+      </div>
+      <div class="ks-col">
+        <p>b) $y = -\frac{1}{2}x + 3$</p>
+        <div class="koordinatensystem">
+          <script type="text/tikz">
+\begin{tikzpicture}[scale=0.62]
+  \draw[gray!30, very thin] (-5,-5) grid (5,5);
+  \draw[->, thick] (-5.5,0) -- (5.5,0) node[right] {$x$};
+  \draw[->, thick] (0,-5.5) -- (0,5.5) node[above] {$y$};
+  \foreach \x in {-5,-4,...,-1,1,2,...,5}
+    \draw (\x,0.12) -- (\x,-0.12) node[below, font=\tiny] {$\x$};
+  \foreach \y in {-5,-4,...,-1,1,2,...,5}
+    \draw (0.12,\y) -- (-0.12,\y) node[left, font=\tiny] {$\y$};
+\end{tikzpicture}
+          </script>
+        </div>
+        <textarea class="antwort-input klein" placeholder="Startpunkt: ( | )   Zweiter Punkt: ( | )"></textarea>
+      </div>
+    </div>
+
+    <div class="aufgabe-text" style="margin-top: 12px;">c) Zeichne $y = -2x + 4$ in ein eigenes Koordinatensystem (auf kariertem Papier oder auf der Rückseite des Druckblatts). Beschreibe hier dein Vorgehen.</div>
+    <textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea>
+  </div>
+
+  <!-- PAUSE -->
+  <div class="pause-box">
+    <strong>Pause — 5 Minuten</strong>
+    Steh auf, streck dich, trinke etwas Wasser. Dann geht's weiter mit Teil C.
+  </div>
+
+  <!-- ═══ TEIL C ═══ -->
+  <div class="section-header">Teil C — Funktionsgleichung aus dem Graph aufstellen<span class="section-time">ca. 25 Minuten</span></div>
+
+  <div class="erklaerung">
+    <p>Wenn du einen Graphen siehst, kannst du die Funktionsgleichung direkt daraus ablesen:</p>
+    <ol style="margin-left: 18px; margin-top: 4px;">
+      <li><strong>$n$ ablesen:</strong> Wo schneidet die Gerade die y-Achse? Das ist der y-Achsenabschnitt $n$.</li>
+      <li><strong>$m$ berechnen:</strong> Wähle zwei gut ablesbare Punkte. Berechne $m = \dfrac{\Delta y}{\Delta x} = \dfrac{y_2 - y_1}{x_2 - x_1}$.</li>
+      <li><strong>Gleichung aufschreiben:</strong> $y = m \cdot x + n$</li>
+    </ol>
+  </div>
+
+  <div class="aufgabe-block">
+    <div class="aufgabe-nr">Aufgabe C1 — Gleichung ablesen</div>
+    <div class="aufgabe-text">Bestimme für jeden Graphen die Funktionsgleichung. Lies $n$ ab und berechne $m$ über das Steigungsdreieck. Schreibe die Gleichung auf.</div>
+
+    <div class="ks-row">
+      <div class="ks-col">
+        <p>a) Gerade 1</p>
+        <div class="koordinatensystem">
+          <script type="text/tikz">
+\begin{tikzpicture}[scale=0.62]
+  \draw[gray!30, very thin] (-4,-4) grid (4,5);
+  \draw[->, thick] (-4.5,0) -- (4.5,0) node[right] {$x$};
+  \draw[->, thick] (0,-4.5) -- (0,5.5) node[above] {$y$};
+  \foreach \x in {-4,-3,...,-1,1,2,...,4}
+    \draw (\x,0.12) -- (\x,-0.12) node[below, font=\tiny] {$\x$};
+  \foreach \y in {-4,-3,...,-1,1,2,...,5}
+    \draw (0.12,\y) -- (-0.12,\y) node[left, font=\tiny] {$\y$};
+  \draw[blue, thick, domain=-4:4] plot (\x, {1.5*\x + 2});
+  \fill[blue] (0,2) circle (2.5pt);
+  \fill[blue] (2,5) circle (2.5pt);
+  \draw[red, dashed] (0,2) -- (2,2) -- (2,5);
+\end{tikzpicture}
+          </script>
+        </div>
+        <textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea>
+      </div>
+      <div class="ks-col">
+        <p>b) Gerade 2</p>
+        <div class="koordinatensystem">
+          <script type="text/tikz">
+\begin{tikzpicture}[scale=0.62]
+  \draw[gray!30, very thin] (-4,-4) grid (4,5);
+  \draw[->, thick] (-4.5,0) -- (4.5,0) node[right] {$x$};
+  \draw[->, thick] (0,-4.5) -- (0,5.5) node[above] {$y$};
+  \foreach \x in {-4,-3,...,-1,1,2,...,4}
+    \draw (\x,0.12) -- (\x,-0.12) node[below, font=\tiny] {$\x$};
+  \foreach \y in {-4,-3,...,-1,1,2,...,5}
+    \draw (0.12,\y) -- (-0.12,\y) node[left, font=\tiny] {$\y$};
+  \draw[blue, thick, domain=-4:4] plot (\x, {-1*\x + 3});
+  \fill[blue] (0,3) circle (2.5pt);
+  \fill[blue] (3,0) circle (2.5pt);
+  \draw[red, dashed] (0,3) -- (3,3) -- (3,0);
+\end{tikzpicture}
+          </script>
+        </div>
+        <textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea>
+      </div>
+    </div>
+
+    <div class="ks-row" style="margin-top: 16px;">
+      <div class="ks-col">
+        <p>c) Gerade 3</p>
+        <div class="koordinatensystem">
+          <script type="text/tikz">
+\begin{tikzpicture}[scale=0.62]
+  \draw[gray!30, very thin] (-4,-4) grid (4,5);
+  \draw[->, thick] (-4.5,0) -- (4.5,0) node[right] {$x$};
+  \draw[->, thick] (0,-4.5) -- (0,5.5) node[above] {$y$};
+  \foreach \x in {-4,-3,...,-1,1,2,...,4}
+    \draw (\x,0.12) -- (\x,-0.12) node[below, font=\tiny] {$\x$};
+  \foreach \y in {-4,-3,...,-1,1,2,...,5}
+    \draw (0.12,\y) -- (-0.12,\y) node[left, font=\tiny] {$\y$};
+  \draw[blue, thick, domain=-4:4] plot (\x, {0.5*\x - 2});
+  \fill[blue] (0,-2) circle (2.5pt);
+  \fill[blue] (4,0) circle (2.5pt);
+  \draw[red, dashed] (0,-2) -- (4,-2) -- (4,0);
+\end{tikzpicture}
+          </script>
+        </div>
+        <textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea>
+      </div>
+      <div class="ks-col">
+        <p>d) Gerade 4</p>
+        <div class="koordinatensystem">
+          <script type="text/tikz">
+\begin{tikzpicture}[scale=0.62]
+  \draw[gray!30, very thin] (-4,-4) grid (4,5);
+  \draw[->, thick] (-4.5,0) -- (4.5,0) node[right] {$x$};
+  \draw[->, thick] (0,-4.5) -- (0,5.5) node[above] {$y$};
+  \foreach \x in {-4,-3,...,-1,1,2,...,4}
+    \draw (\x,0.12) -- (\x,-0.12) node[below, font=\tiny] {$\x$};
+  \foreach \y in {-4,-3,...,-1,1,2,...,5}
+    \draw (0.12,\y) -- (-0.12,\y) node[left, font=\tiny] {$\y$};
+  \draw[blue, thick, domain=-4:4] plot (\x, {-2*\x - 1});
+  \fill[blue] (0,-1) circle (2.5pt);
+  \fill[blue] (-2,3) circle (2.5pt);
+  \draw[red, dashed] (-2,-1) -- (0,-1) -- (0,3);
+\end{tikzpicture}
+          </script>
+        </div>
+        <textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="aufgabe-block">
+    <div class="aufgabe-nr">Aufgabe C2 — Gleichung aus zwei Punkten aufstellen</div>
+    <div class="aufgabe-text">Stelle die Funktionsgleichung $y = m \cdot x + n$ aus den zwei angegebenen Punkten auf. Berechne zuerst $m$, dann $n$.</div>
+    <div class="teilaufgaben">
+      <div class="teilaufgabe">
+        <div class="teilaufgabe-label">a)</div>
+        <textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea>
+      </div>
+    </div>
+    <div class="erklaerung" style="font-size:10pt; margin: 6px 0;">$P_1(0 \mid 2)$ und $P_2(3 \mid 8)$</div>
+    <div class="teilaufgaben">
+      <div class="teilaufgabe">
+        <div class="teilaufgabe-label">b)</div>
+        <textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea>
+      </div>
+    </div>
+    <div class="erklaerung" style="font-size:10pt; margin: 6px 0;">$A(-2 \mid 4)$ und $B(4 \mid 1)$</div>
+    <div class="teilaufgaben">
+      <div class="teilaufgabe">
+        <div class="teilaufgabe-label">c)</div>
+        <textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea>
+      </div>
+    </div>
+    <div class="erklaerung" style="font-size:10pt; margin: 6px 0;">$M(1 \mid -3)$ und $N(3 \mid 1)$</div>
+  </div>
+
+  <!-- ═══ TEIL D ═══ -->
+  <div class="section-header">Teil D — Nullstelle berechnen<span class="section-time">ca. 15 Minuten</span></div>
+
+  <div class="erklaerung">
+    <p><strong>Die Nullstelle</strong> einer Funktion ist der Punkt, an dem der Graph die <strong>x-Achse</strong> schneidet. An diesem Punkt gilt: $y = 0$.</p>
+    <p>Um die Nullstelle zu berechnen, setzt du einfach $y = 0$ in die Funktionsgleichung ein und löst nach $x$ auf.</p>
+  </div>
+
+  <div class="beispiel-box">
+    <div class="bsp-label">Beispiel: Nullstelle von $y = 2x - 4$</div>
+    <p>Setze $y = 0$: &nbsp; $0 = 2x - 4$</p>
+    <p>Löse nach $x$: &nbsp; $4 = 2x$ &nbsp; → &nbsp; $x = 2$</p>
+    <p>Die Nullstelle liegt bei $x = 2$, also im Punkt $(2 \mid 0)$.</p>
+  </div>
+
+  <div class="koordinatensystem">
+    <script type="text/tikz">
+\begin{tikzpicture}[scale=0.75]
+  \draw[gray!30, very thin] (-2,-4) grid (5,4);
+  \draw[->, thick] (-2.5,0) -- (5.5,0) node[right] {$x$};
+  \draw[->, thick] (0,-4.5) -- (0,4.5) node[above] {$y$};
+  \foreach \x in {-2,-1,1,2,...,5}
+    \draw (\x,0.1) -- (\x,-0.1) node[below, font=\footnotesize] {$\x$};
+  \foreach \y in {-4,-3,...,-1,1,2,...,4}
+    \draw (0.1,\y) -- (-0.1,\y) node[left, font=\footnotesize] {$\y$};
+  \draw[blue, thick, domain=-1.5:4.5] plot (\x, {2*\x - 4});
+  \node[blue, above right, font=\small] at (3.5, 3) {$y = 2x - 4$};
+  \fill[red] (2,0) circle (3pt);
+  \node[red, above, font=\footnotesize] at (2, 0.15) {Nullstelle $(2|0)$};
+  \fill[blue] (0,-4) circle (2.5pt);
+  \node[blue, right, font=\footnotesize] at (0.1, -4) {$n = -4$};
+\end{tikzpicture}
+    </script>
+  </div>
+
+  <div class="merke-box">
+    <div class="merke-label">Merke — Nullstelle</div>
+    Nullstelle = Schnittpunkt mit der x-Achse. Setze $y = 0$ und löse nach $x$ auf.<br>
+    Bei $y = mx + n$ gilt: $x_0 = -\dfrac{n}{m}$ (wenn $m \neq 0$).
+  </div>
+
+  <div class="aufgabe-block">
+    <div class="aufgabe-nr">Aufgabe D1 — Nullstelle berechnen</div>
+    <div class="aufgabe-text">Berechne die Nullstelle jeder Funktion. Zeige deinen Rechenweg.</div>
+    <div class="teilaufgaben">
+      <div class="teilaufgabe">
+        <div class="teilaufgabe-label">a)</div>
+        <textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea>
+      </div>
+    </div>
+    <div class="erklaerung" style="font-size:10pt; margin: 4px 0 6px;">$y = 3x - 6$</div>
+    <div class="teilaufgaben">
+      <div class="teilaufgabe">
+        <div class="teilaufgabe-label">b)</div>
+        <textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea>
+      </div>
+    </div>
+    <div class="erklaerung" style="font-size:10pt; margin: 4px 0 6px;">$y = -2x + 5$</div>
+    <div class="teilaufgaben">
+      <div class="teilaufgabe">
+        <div class="teilaufgabe-label">c)</div>
+        <textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea>
+      </div>
+    </div>
+    <div class="erklaerung" style="font-size:10pt; margin: 4px 0 6px;">$y = \frac{1}{2}x + 3$</div>
+    <div class="teilaufgaben">
+      <div class="teilaufgabe">
+        <div class="teilaufgabe-label">d)</div>
+        <textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea>
+      </div>
+    </div>
+    <div class="erklaerung" style="font-size:10pt; margin: 4px 0 6px;">$y = -\frac{3}{4}x + 6$</div>
+  </div>
+
+  <div class="aufgabe-block">
+    <div class="aufgabe-nr">Aufgabe D2 — Nullstelle interpretieren</div>
+    <div class="aufgabe-text">Ein Wassertank wird durch ein Rohr geleert. Die Wassermenge (in Litern) nach $x$ Minuten beträgt: $y = -15x + 300$.</div>
+    <div class="teilaufgaben">
+      <div class="teilaufgabe">
+        <div class="teilaufgabe-label">a)</div>
+        <textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea>
+      </div>
+    </div>
+    <div class="erklaerung" style="font-size:10pt; margin: 4px 0 6px;">Wie viel Wasser ist zu Beginn im Tank ($x = 0$)?</div>
+    <div class="teilaufgaben">
+      <div class="teilaufgabe">
+        <div class="teilaufgabe-label">b)</div>
+        <textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea>
+      </div>
+    </div>
+    <div class="erklaerung" style="font-size:10pt; margin: 4px 0 6px;">Berechne die Nullstelle. Was bedeutet sie in diesem Kontext?</div>
+    <div class="teilaufgaben">
+      <div class="teilaufgabe">
+        <div class="teilaufgabe-label">c)</div>
+        <textarea class="antwort-input klein" placeholder="Lösung mit Rechenweg …"></textarea>
+      </div>
+    </div>
+    <div class="erklaerung" style="font-size:10pt; margin: 4px 0 6px;">Was bedeutet die Steigung $m = -15$ in diesem Kontext?</div>
+  </div>
+
+  <!-- BONUS -->
+  <div class="bonus-header">Bonus — Freiwillig (für Schnelle)</div>
+
+  <div class="aufgabe-block">
+    <div class="aufgabe-nr">Bonus-Aufgabe — Parallele und schneidende Geraden</div>
+    <div class="erklaerung">
+      <p><strong>Parallele Geraden</strong> haben dieselbe Steigung $m$, aber verschiedene y-Achsenabschnitte.</p>
+      <p><strong>Identische Geraden</strong> haben dasselbe $m$ und dasselbe $n$.</p>
+    </div>
+    <div class="aufgabe-text">Gegeben sind die Funktionen:<br>$f(x) = 2x + 1$ &nbsp;·&nbsp; $g(x) = 2x - 3$ &nbsp;·&nbsp; $h(x) = -x + 4$ &nbsp;·&nbsp; $k(x) = 2x + 1$</div>
+    <div class="teilaufgaben">
+      <div class="teilaufgabe">
+        <div class="teilaufgabe-label">a)</div>
+        <textarea class="antwort-input klein" placeholder="Lösung mit Rechenweg …"></textarea>
+      </div>
+    </div>
+    <div class="erklaerung" style="font-size:10pt; margin: 4px 0 6px;">Welche Geraden sind parallel zueinander? Begründe.</div>
+    <div class="teilaufgaben">
+      <div class="teilaufgabe">
+        <div class="teilaufgabe-label">b)</div>
+        <textarea class="antwort-input klein" placeholder="Lösung mit Rechenweg …"></textarea>
+      </div>
+    </div>
+    <div class="erklaerung" style="font-size:10pt; margin: 4px 0 6px;">Welche zwei Geraden sind identisch? Was bedeutet das geometrisch?</div>
+    <div class="teilaufgaben">
+      <div class="teilaufgabe">
+        <div class="teilaufgabe-label">c)</div>
+        <textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea>
+      </div>
+    </div>
+    <div class="erklaerung" style="font-size:10pt; margin: 4px 0 6px;">Berechne den Schnittpunkt von $f$ und $h$. (Tipp: Setze $f(x) = h(x)$ und löse nach $x$.)</div>
+  </div>
+
+</div><!-- .page-card -->
+
+<div class="footer-fixed">
+  <span>Mathematik &nbsp;·&nbsp; Klasse 8D &nbsp;·&nbsp; Heimarbeit</span>
+  <span>Rahmenplan MV &nbsp;·&nbsp; Lineare Funktionen &nbsp;·&nbsp; ca. 18 UStd.</span>
+</div>
+
+<button class="speichern-btn" onclick="window.print()">Als PDF speichern</button>
+
+<script>
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: "$$", right: "$$", display: true},
+      {left: "$", right: "$", display: false}
+    ]
+  });
+</script>
+
+</body>
+</html>
