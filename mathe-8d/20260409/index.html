@@ -83,6 +83,36 @@
     .ks-col { flex: 1; min-width: 200px; }
     .ks-col > p { font-size: 10.5pt; font-weight: 600; margin-bottom: 4px; }
 
+    /* ── Zeichenbereich ── */
+    .drawable-ks { margin: 4px 0 8px; }
+    .draw-toolbar {
+      display: flex; align-items: center; gap: 6px;
+      margin-bottom: 5px; flex-wrap: wrap;
+    }
+    .draw-tool-btn {
+      padding: 4px 10px; font-size: 9.5pt; font-family: inherit;
+      border: 1.5px solid #bbb; background: #f5f5f5; cursor: pointer;
+      color: #333;
+    }
+    .draw-tool-btn.active { background: #444; color: #fff; border-color: #444; }
+    .draw-tool-btn:hover:not(.active) { background: #e8e8e8; }
+    .draw-color-swatch {
+      width: 22px; height: 22px; border-radius: 50%;
+      border: 2px solid #ccc; cursor: pointer; flex-shrink: 0;
+    }
+    .draw-color-swatch.active { border: 2.5px solid #333; transform: scale(1.2); }
+    .draw-sep { width: 1px; height: 20px; background: #ccc; margin: 0 2px; }
+    .ks-canvas-wrap { position: relative; display: inline-block; }
+    .ks-canvas-wrap canvas {
+      position: absolute; top: 0; left: 0;
+      touch-action: none;
+    }
+    .draw-hint { font-size: 8.5pt; color: #888; margin-top: 3px; min-height: 14px; }
+    @media print {
+      .draw-toolbar { display: none !important; }
+      .draw-hint { display: none !important; }
+    }
+
     .aufgaben-tabelle { width: 100%; border-collapse: collapse; margin: 10px 0 12px; font-size: 10.5pt; }
     .aufgaben-tabelle th { background: #666; color: #fff; padding: 6px 10px; text-align: left; font-weight: 600; }
     .aufgaben-tabelle td { border: 1px solid #ccc; padding: 6px 10px; vertical-align: middle; }
@@ -201,13 +231,23 @@
     <div class="ks-row">
       <div class="ks-col">
         <p>a) $y = 2x - 1$</p>
-        <div class="koordinatensystem" id="ks-b1a"></div>
-        <textarea class="antwort-input klein" placeholder="Startpunkt: (0 | __)   Zweiter Punkt: (__ | __)"></textarea>
+        <div class="drawable-ks" id="drawable-ks-b1a">
+          <div class="draw-toolbar" id="toolbar-ks-b1a"></div>
+          <div class="ks-canvas-wrap" id="wrap-ks-b1a">
+            <div class="koordinatensystem" id="ks-b1a"></div>
+          </div>
+          <div class="draw-hint" id="hint-ks-b1a"></div>
+        </div>
       </div>
       <div class="ks-col">
         <p>b) $y = -\frac{1}{2}x + 3$</p>
-        <div class="koordinatensystem" id="ks-b1b"></div>
-        <textarea class="antwort-input klein" placeholder="Startpunkt: (0 | __)   Zweiter Punkt: (__ | __)"></textarea>
+        <div class="drawable-ks" id="drawable-ks-b1b">
+          <div class="draw-toolbar" id="toolbar-ks-b1b"></div>
+          <div class="ks-canvas-wrap" id="wrap-ks-b1b">
+            <div class="koordinatensystem" id="ks-b1b"></div>
+          </div>
+          <div class="draw-hint" id="hint-ks-b1b"></div>
+        </div>
       </div>
     </div>
     <div class="aufgabe-text" style="margin-top:12px;">c) Zeichne $y = -2x + 4$ auf kariertem Papier. Beschreibe hier dein Vorgehen mit dem Steigungsdreieck.</div>
@@ -341,6 +381,203 @@
 </div>
 <button class="speichern-btn" onclick="window.print()">Als PDF speichern</button>
 
+<!-- ═══ DRAWING SYSTEM ═══ -->
+<script>
+const _draw = {};  // state per canvas id
+
+function initDrawing(ksId) {
+  const ksDiv   = document.getElementById(ksId);
+  const svg     = ksDiv && ksDiv.querySelector('svg');
+  if (!svg) return;
+
+  const W = parseInt(svg.getAttribute('width'));
+  const H = parseInt(svg.getAttribute('height'));
+
+  // Canvas
+  const wrap = document.getElementById('wrap-' + ksId);
+  wrap.style.width  = W + 'px';
+  wrap.style.height = H + 'px';
+
+  const canvas = document.createElement('canvas');
+  canvas.id     = 'cvs-' + ksId;
+  canvas.width  = W;
+  canvas.height = H;
+  canvas.style.cssText = 'position:absolute;top:0;left:0;cursor:crosshair;touch-action:none;';
+  wrap.appendChild(canvas);
+
+  const ctx = canvas.getContext('2d');
+  _draw[ksId] = { tool: 'gerade', color: '#1d4ed8', down: false, lineP1: null, snapshot: null };
+
+  // ── Toolbar ──
+  const tbEl  = document.getElementById('toolbar-' + ksId);
+  const hintEl = document.getElementById('hint-' + ksId);
+  const COLORS = [
+    { hex: '#1d4ed8', name: 'Blau'  },
+    { hex: '#dc2626', name: 'Rot'   },
+    { hex: '#111111', name: 'Schwarz' }
+  ];
+
+  function renderToolbar() {
+    const st = _draw[ksId];
+    tbEl.innerHTML = '';
+
+    ['stift', 'gerade'].forEach(tool => {
+      const btn = document.createElement('button');
+      btn.className = 'draw-tool-btn' + (st.tool === tool ? ' active' : '');
+      btn.textContent = tool === 'stift' ? 'Stift' : 'Gerade';
+      btn.onclick = () => { st.tool = tool; st.lineP1 = null; updateHint(); renderToolbar(); };
+      tbEl.appendChild(btn);
+    });
+
+    const sep = document.createElement('span');
+    sep.className = 'draw-sep';
+    tbEl.appendChild(sep);
+
+    COLORS.forEach(c => {
+      const sw = document.createElement('button');
+      sw.className = 'draw-color-swatch' + (st.color === c.hex ? ' active' : '');
+      sw.style.background = c.hex;
+      sw.title = c.name;
+      sw.onclick = () => { st.color = c.hex; renderToolbar(); };
+      tbEl.appendChild(sw);
+    });
+
+    const sep2 = document.createElement('span');
+    sep2.className = 'draw-sep';
+    tbEl.appendChild(sep2);
+
+    const clearBtn = document.createElement('button');
+    clearBtn.className = 'draw-tool-btn';
+    clearBtn.textContent = 'Löschen';
+    clearBtn.onclick = () => {
+      ctx.clearRect(0, 0, W, H);
+      _draw[ksId].lineP1 = null;
+      updateHint();
+    };
+    tbEl.appendChild(clearBtn);
+  }
+
+  function updateHint() {
+    const st = _draw[ksId];
+    if (!hintEl) return;
+    if (st.tool === 'gerade') {
+      hintEl.textContent = st.lineP1
+        ? 'Zweiten Punkt klicken — die Gerade wird gezeichnet.'
+        : 'Ersten Punkt auf dem Koordinatensystem klicken.';
+    } else {
+      hintEl.textContent = 'Halten und ziehen zum Zeichnen.';
+    }
+  }
+
+  renderToolbar();
+  updateHint();
+
+  // ── Pointer helpers ──
+  function pos(e) {
+    const r  = canvas.getBoundingClientRect();
+    const sx = W / r.width;
+    const sy = H / r.height;
+    const src = e.touches ? e.touches[0] : e;
+    return { x: (src.clientX - r.left) * sx, y: (src.clientY - r.top) * sy };
+  }
+
+  function drawDot(x, y, color) {
+    ctx.save();
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(x, y, 4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawLine(x1, y1, x2, y2, color) {
+    ctx.save();
+    ctx.strokeStyle = color;
+    ctx.lineWidth   = 2;
+    ctx.lineCap     = 'round';
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // ── Pencil events ──
+  function onPencilDown(e) {
+    if (_draw[ksId].tool !== 'stift') return;
+    _draw[ksId].down = true;
+    const p = pos(e);
+    ctx.save();
+    ctx.strokeStyle = _draw[ksId].color;
+    ctx.lineWidth   = 2;
+    ctx.lineCap     = 'round';
+    ctx.lineJoin    = 'round';
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y);
+    canvas._pencilCtx = ctx;  // keep state across moves
+    e.preventDefault();
+  }
+  function onPencilMove(e) {
+    if (!_draw[ksId].down || _draw[ksId].tool !== 'stift') return;
+    const p = pos(e);
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+    e.preventDefault();
+  }
+  function onPencilUp() { _draw[ksId].down = false; ctx.beginPath(); }
+
+  // ── Line tool events ──
+  function onLineClick(e) {
+    if (_draw[ksId].tool !== 'gerade') return;
+    const p  = pos(e);
+    const st = _draw[ksId];
+    if (!st.lineP1) {
+      // First point
+      st.lineP1     = p;
+      st.snapshot   = ctx.getImageData(0, 0, W, H);
+      drawDot(p.x, p.y, st.color);
+    } else {
+      // Second point — draw final line
+      ctx.putImageData(st.snapshot, 0, 0);
+      drawLine(st.lineP1.x, st.lineP1.y, p.x, p.y, st.color);
+      drawDot(st.lineP1.x, st.lineP1.y, st.color);
+      drawDot(p.x, p.y, st.color);
+      st.lineP1   = null;
+      st.snapshot = null;
+    }
+    updateHint();
+    e.preventDefault();
+  }
+
+  function onLineMove(e) {
+    if (_draw[ksId].tool !== 'gerade' || !_draw[ksId].lineP1) return;
+    const p  = pos(e);
+    const st = _draw[ksId];
+    ctx.putImageData(st.snapshot, 0, 0);
+    // Preview: dashed line
+    ctx.save();
+    ctx.strokeStyle = st.color;
+    ctx.lineWidth   = 1.5;
+    ctx.setLineDash([5, 4]);
+    ctx.globalAlpha = 0.6;
+    ctx.beginPath();
+    ctx.moveTo(st.lineP1.x, st.lineP1.y);
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+    ctx.restore();
+    e.preventDefault();
+  }
+
+  // Attach events
+  canvas.addEventListener('mousedown',  e => { onPencilDown(e); onLineClick(e); });
+  canvas.addEventListener('mousemove',  e => { onPencilMove(e); onLineMove(e); });
+  canvas.addEventListener('mouseup',    onPencilUp);
+  canvas.addEventListener('touchstart', e => { onPencilDown(e); onLineClick(e); }, { passive: false });
+  canvas.addEventListener('touchmove',  e => { onPencilMove(e); onLineMove(e); }, { passive: false });
+  canvas.addEventListener('touchend',   onPencilUp);
+}
+</script>
+
 <!-- ═══ SVG COORDINATE SYSTEM BUILDER ═══ -->
 <script>
 function buildKS(containerId, opts) {
@@ -446,11 +683,13 @@ document.addEventListener('DOMContentLoaded', function() {
     fnLabel: 'y = ½x + 1'
   });
 
-  // B1a: leeres Gitter für y = 2x - 1
+  // B1a: leeres Gitter für y = 2x - 1 (zeichenbar)
   buildKS('ks-b1a', { xMin: -3, xMax: 4, yMin: -4, yMax: 5, scale: 26 });
+  initDrawing('ks-b1a');
 
-  // B1b: leeres Gitter für y = -½x + 3
+  // B1b: leeres Gitter für y = -½x + 3 (zeichenbar)
   buildKS('ks-b1b', { xMin: -3, xMax: 5, yMin: -2, yMax: 5, scale: 26 });
+  initDrawing('ks-b1b');
 
   // Nullstelle-Beispiel: y = 2x - 4
   buildKS('ks-nullstelle', {
