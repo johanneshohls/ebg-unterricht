@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heimarbeit – Physik 8D – Einstieg Wärmelehre</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 11pt;
+      line-height: 1.55;
+      color: #111;
+      background: #eee;
+    }
+
+    @media screen {
+      body { max-width: 860px; margin: 0 auto; padding: 24px 24px 80px; }
+    }
+
+    @media print {
+      body { background: #fff; padding: 0; max-width: 100%; }
+      .speichern-btn { display: none !important; }
+      textarea {
+        border: 1px solid #ccc !important;
+        background: #fafafa !important;
+        resize: none;
+      }
+      textarea::placeholder { color: transparent !important; }
+      input.name-input::placeholder { color: transparent !important; }
+      .page-card { box-shadow: none; padding: 0; margin: 0; }
+      .section-block { page-break-inside: avoid; }
+      .aufgabe-block { page-break-inside: avoid; }
+    }
+
+    @page {
+      size: A4;
+      margin: 15mm 18mm;
+    }
+
+    /* ── Card ── */
+    .page-card {
+      background: #fff;
+      padding: 32px 36px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+      margin-bottom: 24px;
+    }
+
+    /* ── Header ── */
+    .header-meta {
+      font-size: 9pt;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+    .header-title {
+      font-size: 18pt;
+      font-weight: 700;
+      color: #222;
+      margin-bottom: 2px;
+    }
+    .header-subtitle {
+      font-size: 11pt;
+      color: #555;
+      margin-bottom: 20px;
+    }
+    .header-divider {
+      border: none;
+      border-top: 2px solid #444;
+      margin-bottom: 20px;
+    }
+
+    /* ── Name / Datum ── */
+    .name-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .name-field {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      min-width: 200px;
+    }
+    .name-field label {
+      font-size: 10pt;
+      color: #555;
+      white-space: nowrap;
+    }
+    input.name-input {
+      flex: 1;
+      border: none;
+      border-bottom: 1.5px solid #888;
+      padding: 4px 2px;
+      font-family: inherit;
+      font-size: 11pt;
+      color: #111;
+      outline: none;
+      background: transparent;
+    }
+
+    /* ── Ablauf-Tabelle ── */
+    .ablauf-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10pt;
+      margin-bottom: 24px;
+    }
+    .ablauf-table th {
+      background: #555;
+      color: #fff;
+      padding: 6px 10px;
+      text-align: left;
+      font-weight: 600;
+    }
+    .ablauf-table td {
+      padding: 5px 10px;
+      border-bottom: 1px solid #ddd;
+      vertical-align: top;
+    }
+    .ablauf-table tr:last-child td { border-bottom: none; }
+    .ablauf-table .pause-row td {
+      background: #f5f5f5;
+      font-style: italic;
+      color: #555;
+    }
+
+    /* ── Lernziele ── */
+    .lernziele-box {
+      border: 1px solid #bbb;
+      padding: 12px 16px;
+      margin-bottom: 24px;
+      background: #fafafa;
+    }
+    .lernziele-box h3 {
+      font-size: 10pt;
+      font-weight: 700;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+    .lernziele-box ul {
+      list-style: none;
+      padding: 0;
+    }
+    .lernziele-box ul li::before {
+      content: '■ ';
+      font-size: 8pt;
+      color: #555;
+    }
+    .lernziele-box ul li {
+      margin-bottom: 3px;
+      font-size: 10pt;
+    }
+
+    /* ── Abschnitts-Header ── */
+    .section-header {
+      background: #555;
+      color: #fff;
+      padding: 7px 14px;
+      font-size: 12pt;
+      font-weight: 700;
+      margin: 28px 0 16px;
+      letter-spacing: 0.02em;
+    }
+    .section-header .section-time {
+      font-size: 9pt;
+      font-weight: 400;
+      opacity: 0.85;
+      margin-left: 8px;
+    }
+
+    /* ── Erklärungsblock ── */
+    .erklaerung {
+      background: #fafafa;
+      border-left: 4px solid #999;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      font-size: 10.5pt;
+    }
+    .erklaerung p { margin-bottom: 6px; }
+    .erklaerung p:last-child { margin-bottom: 0; }
+
+    /* ── MERKE-Box ── */
+    .merke-box {
+      border-left: 4px solid #555;
+      background: #f5f5f5;
+      padding: 10px 14px;
+      margin: 14px 0;
+    }
+    .merke-box .merke-label {
+      font-size: 9pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #555;
+      margin-bottom: 5px;
+    }
+
+    /* ── Aufgaben ── */
+    .aufgabe-block {
+      margin-bottom: 18px;
+    }
+    .aufgabe-nr {
+      font-weight: 700;
+      font-size: 11pt;
+      margin-bottom: 4px;
+    }
+    .aufgabe-text {
+      margin-bottom: 8px;
+      font-size: 11pt;
+    }
+
+    /* ── Textareas ── */
+    textarea.antwort-input {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1.5px solid #bbb;
+      background: #fff;
+      font-family: inherit;
+      font-size: 11pt;
+      color: #111;
+      resize: vertical;
+      box-sizing: border-box;
+    }
+    textarea.antwort-input.klein { min-height: 50px; }
+    textarea.antwort-input.gross { min-height: 110px; }
+    textarea.antwort-input.xl   { min-height: 150px; }
+    textarea.antwort-input:not(.klein):not(.gross):not(.xl) { min-height: 75px; }
+
+    /* ── Teilaufgaben ── */
+    .teilaufgaben {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .teilaufgabe {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .teilaufgabe-label {
+      font-weight: 700;
+      min-width: 22px;
+      padding-top: 9px;
+      font-size: 11pt;
+      color: #333;
+    }
+    .teilaufgabe textarea {
+      flex: 1;
+    }
+
+    /* ── Pause-Box ── */
+    .pause-box {
+      border: 2px dashed #aaa;
+      text-align: center;
+      padding: 14px 20px;
+      margin: 28px 0;
+      color: #555;
+      font-size: 11pt;
+    }
+    .pause-box strong { display: block; font-size: 12pt; margin-bottom: 4px; }
+
+    /* ── Bonus ── */
+    .bonus-header {
+      background: #888;
+      color: #fff;
+      padding: 7px 14px;
+      font-size: 11pt;
+      font-weight: 700;
+      margin: 28px 0 14px;
+    }
+
+    /* ── Zuordnungs-Tabelle ── */
+    .zuordnung-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0 12px;
+      font-size: 10.5pt;
+    }
+    .zuordnung-table th {
+      background: #666;
+      color: #fff;
+      padding: 6px 10px;
+      text-align: left;
+      font-weight: 600;
+    }
+    .zuordnung-table td {
+      border: 1px solid #ccc;
+      padding: 6px 10px;
+      vertical-align: top;
+    }
+    .zuordnung-table td[contenteditable="true"] {
+      background: #fafafa;
+      min-width: 120px;
+    }
+    .zuordnung-table td[contenteditable="true"]:focus {
+      outline: 2px solid #888;
+      background: #fff;
+    }
+
+    /* ── Beispiel-Infobox ── */
+    .beispiel-box {
+      border: 1px dashed #bbb;
+      background: #fefefe;
+      padding: 8px 12px;
+      margin: 8px 0 12px;
+      font-size: 10pt;
+      color: #444;
+    }
+    .beispiel-box .bsp-label {
+      font-weight: 700;
+      color: #666;
+      font-size: 9pt;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+
+    /* ── Footer ── */
+    .footer-fixed {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border-top: 1px solid #ccc;
+      padding: 5px 36px;
+      font-size: 8.5pt;
+      color: #777;
+      display: flex;
+      justify-content: space-between;
+      z-index: 100;
+    }
+
+    @media print {
+      .footer-fixed {
+        position: running(footer);
+      }
+    }
+
+    /* ── Speichern-Button ── */
+    .speichern-btn {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      background: #444;
+      color: #fff;
+      border: none;
+      padding: 14px 22px;
+      font-size: 11pt;
+      font-weight: 600;
+      cursor: pointer;
+      z-index: 200;
+      font-family: inherit;
+    }
+    .speichern-btn:hover { background: #222; }
+
+    /* ── Util ── */
+    p { margin-bottom: 8px; }
+    .mt8 { margin-top: 8px; }
+    .mb0 { margin-bottom: 0; }
+  </style>
+</head>
+<body>
+
+<div class="page-card">
+
+  <!-- Header -->
+  <div class="header-meta">Physik &nbsp;·&nbsp; Klasse 8D &nbsp;·&nbsp; Heimarbeit &nbsp;·&nbsp; 09. April 2026</div>
+  <div class="header-title">Einstieg in die Wärmelehre</div>
+  <div class="header-subtitle">Temperatur &amp; Wärme &nbsp;·&nbsp; Wärme als Energie &nbsp;·&nbsp; Wärmeübertragung</div>
+  <hr class="header-divider">
+
+  <!-- Name / Datum -->
+  <div class="name-row">
+    <div class="name-field">
+      <label>Name:</label>
+      <input type="text" class="name-input" placeholder="Dein Name">
+    </div>
+    <div class="name-field">
+      <label>Datum:</label>
+      <input type="text" class="name-input" placeholder="09.04.2026">
+    </div>
+  </div>
+
+  <!-- Ablauf-Tabelle -->
+  <table class="ablauf-table">
+    <thead>
+      <tr>
+        <th>Teil</th>
+        <th>Inhalt</th>
+        <th>Dauer</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>A</strong></td>
+        <td>Wiederholung: Temperatur &amp; Aggregatzustände (aus Klasse 6)</td>
+        <td>ca. 15 Min</td>
+      </tr>
+      <tr>
+        <td><strong>B</strong></td>
+        <td>Neu: Wärme als Energieform — Wärme ≠ Temperatur</td>
+        <td>ca. 20 Min</td>
+      </tr>
+      <tr class="pause-row">
+        <td>—</td>
+        <td>Pause: Fenster auf, kurz bewegen, Wasser trinken</td>
+        <td>5 Min</td>
+      </tr>
+      <tr>
+        <td><strong>C</strong></td>
+        <td>Neu: Die drei Arten der Wärmeübertragung</td>
+        <td>ca. 25 Min</td>
+      </tr>
+      <tr>
+        <td><strong>D</strong></td>
+        <td>Anwendung: Alltag und Transfer</td>
+        <td>ca. 15 Min</td>
+      </tr>
+      <tr>
+        <td><strong>Bonus</strong></td>
+        <td>Freiwillig: Denksportaufgabe (für Schnelle)</td>
+        <td>offen</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Lernziele -->
+  <div class="lernziele-box">
+    <h3>Das kannst du nach dieser Stunde</h3>
+    <ul>
+      <li>den Unterschied zwischen Temperatur und Wärme erklären</li>
+      <li>Wärme als Energieform benennen und die Einheit Joule kennen</li>
+      <li>die drei Arten der Wärmeübertragung (Leitung, Strömung, Strahlung) beschreiben</li>
+      <li>Alltagsbeispiele der Wärmeübertragung korrekt zuordnen und erklären</li>
+    </ul>
+  </div>
+
+  <!-- ═══ ABSCHNITT A ═══ -->
+  <div class="section-header">
+    Teil A — Wiederholung aus Klasse 6
+    <span class="section-time">ca. 15 Minuten</span>
+  </div>
+
+  <div class="erklaerung">
+    <p>In Klasse 6 habt ihr schon einiges über Wärme gelernt. Bevor wir tiefer einsteigen, frischen wir das auf. Lies die Stichpunkte durch und löse dann die Aufgaben.</p>
+    <p><strong>Temperatur</strong> gibt an, wie warm oder kalt ein Körper ist. Sie wird in <strong>Grad Celsius (°C)</strong> gemessen. Ein Thermometer zeigt die Temperatur an, weil sich Flüssigkeiten bei Erwärmung ausdehnen.</p>
+    <p><strong>Aggregatzustände:</strong> Stoffe gibt es in drei Zustandsformen:</p>
+    <ul style="margin-left: 18px; margin-top: 4px;">
+      <li><strong>Fest</strong> — feste Form, nicht fließfähig (z.B. Eis)</li>
+      <li><strong>Flüssig</strong> — fließfähig, nimmt Form des Gefäßes an (z.B. Wasser)</li>
+      <li><strong>Gasförmig</strong> — füllt den ganzen Raum aus, sehr leicht (z.B. Wasserdampf)</li>
+    </ul>
+  </div>
+
+  <div class="merke-box">
+    <div class="merke-label">Merke</div>
+    Beim Übergang zwischen den Aggregatzuständen bleibt die Temperatur konstant, solange noch beide Zustände gleichzeitig vorhanden sind (z.B. beim Schmelzen von Eis bei 0 °C).
+  </div>
+
+  <div class="aufgabe-block">
+    <div class="aufgabe-nr">Aufgabe A1</div>
+    <div class="aufgabe-text">Benenne die Übergänge zwischen den Aggregatzuständen. Schreibe für jeden Pfeil den Fachbegriff auf (z.B. „Schmelzen").</div>
+    <div class="erklaerung" style="font-size:10pt; margin-bottom: 10px;">
+      Fest ⟶ Flüssig &nbsp;|&nbsp; Flüssig ⟶ Fest &nbsp;|&nbsp; Flüssig ⟶ Gasförmig &nbsp;|&nbsp; Gasförmig ⟶ Flüssig &nbsp;|&nbsp; Fest ⟶ Gasförmig
+    </div>
+    <textarea class="antwort-input gross" placeholder="Lösung mit Rechenweg …"></textarea>
+  </div>
+
+  <div class="aufgabe-block">
+    <div class="aufgabe-nr">Aufgabe A2</div>
+    <div class="aufgabe-text">Erkläre, warum ein Metall-Lineal im Sommer etwas länger ist als im Winter. Nutze den Begriff <em>Wärmeausdehnung</em> in deiner Erklärung.</div>
+    <textarea class="antwort-input gross" placeholder="Lösung mit Rechenweg …"></textarea>
+  </div>
+
+  <div class="aufgabe-block">
+    <div class="aufgabe-nr">Aufgabe A3</div>
+    <div class="aufgabe-text">Ordne die folgenden Temperaturen den passenden Situationen zu. Schreibe die richtigen Buchstaben in die Lücken.</div>
+    <div class="erklaerung" style="font-size: 10pt; margin-bottom: 10px;">
+      <strong>Temperaturen:</strong> &nbsp; −18 °C &nbsp;·&nbsp; 0 °C &nbsp;·&nbsp; 20 °C &nbsp;·&nbsp; 37 °C &nbsp;·&nbsp; 100 °C
+      <br>
+      <strong>Situationen:</strong> &nbsp;
+      (a) Körpertemperatur eines gesunden Menschen &nbsp;·&nbsp;
+      (b) Siedepunkt von Wasser &nbsp;·&nbsp;
+      (c) Schmelzpunkt von Eis &nbsp;·&nbsp;
+      (d) Zimmertemperatur &nbsp;·&nbsp;
+      (e) Tiefkühlfach
+    </div>
+    <textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea>
+  </div>
+
+  <!-- ═══ ABSCHNITT B ═══ -->
+  <div class="section-header">
+    Teil B — Wärme als Energieform
+    <span class="section-time">ca. 20 Minuten</span>
+  </div>
+
+  <div class="erklaerung">
+    <p><strong>Wärme und Temperatur sind nicht dasselbe!</strong></p>
+    <p><strong>Temperatur</strong> ist eine Zustandsgröße — sie beschreibt, wie „heiß" ein Körper ist. Sie hängt davon ab, wie schnell sich die Teilchen des Körpers im Durchschnitt bewegen.</p>
+    <p><strong>Wärme (Wärmemenge) $Q$</strong> ist eine Energiemenge — sie beschreibt, wie viel Energie zwischen zwei Körpern übertragen wird, weil sie unterschiedliche Temperaturen haben. Wärme fließt immer vom wärmeren zum kälteren Körper.</p>
+    <p>Die Einheit der Wärme ist das <strong>Joule [J]</strong> — dieselbe Einheit wie bei mechanischer Energie.</p>
+  </div>
+
+  <div class="merke-box">
+    <div class="merke-label">Merke</div>
+    Wärme $Q$ ist Energie. Sie wird übertragen, wenn zwei Körper mit verschiedenen Temperaturen in Kontakt kommen. Wärme fließt <strong>immer vom wärmeren zum kälteren Körper</strong> — niemals umgekehrt (ohne Zusatzaufwand).
+  </div>
+
+  <div class="erklaerung">
+    <p>Wie viel Wärme ein Körper aufnehmen muss, um sich zu erwärmen, hängt von drei Dingen ab:</p>
+    <ul style="margin-left: 18px; margin-top: 4px;">
+      <li>seiner <strong>Masse</strong> $m$ (in kg)</li>
+      <li>der <strong>Temperaturänderung</strong> $\Delta T$ (in K oder °C)</li>
+      <li>dem <strong>Stoff</strong>, aus dem er besteht (beschrieben durch die spezifische Wärmekapazität $c$)</li>
+    </ul>
+    <p style="margin-top: 8px;">Die Formel lautet: $$Q = m \cdot c \cdot \Delta T$$</p>
+    <p>Mit $Q$ in Joule [J], $m$ in Kilogramm [kg], $c$ in $\frac{\text{J}}{\text{kg} \cdot \text{K}}$ und $\Delta T$ in Kelvin [K] (entspricht °C bei Differenzen).</p>
+  </div>
+
+  <div class="beispiel-box">
+    <div class="bsp-label">Beispiel</div>
+    Wasser hat eine sehr hohe spezifische Wärmekapazität von $c = 4200\,\frac{\text{J}}{\text{kg} \cdot \text{K}}$. Um 1 kg Wasser um 1 K zu erwärmen, braucht man 4200 J. Eisen dagegen hat nur $c = 450\,\frac{\text{J}}{\text{kg} \cdot \text{K}}$ — es erwärmt sich also viel schneller.
+  </div>
+
+  <div class="aufgabe-block">
+    <div class="aufgabe-nr">Aufgabe B1</div>
+    <div class="aufgabe-text">Entscheide: Welche Aussage ist richtig? Begründe jeweils kurz.</div>
+    <div class="teilaufgaben">
+      <div class="teilaufgabe">
+        <div class="teilaufgabe-label">a)</div>
+        <textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea>
+      </div>
+    </div>
+    <div class="erklaerung" style="font-size: 10pt; margin: 8px 0 8px;">
+      Aussage: „Ein großer Topf kochendes Wasser hat mehr Wärmeenergie als eine kleine Tasse kochendes Wasser, obwohl beide 100 °C haben."
+    </div>
+    <div class="teilaufgaben">
+      <div class="teilaufgabe">
+        <div class="teilaufgabe-label">b)</div>
+        <textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea>
+      </div>
+    </div>
+    <div class="erklaerung" style="font-size: 10pt; margin: 8px 0 8px;">
+      Aussage: „Wärme und Temperatur sind dasselbe."
+    </div>
+  </div>
+
+  <div class="aufgabe-block">
+    <div class="aufgabe-nr">Aufgabe B2</div>
+    <div class="aufgabe-text">Berechne die Wärmemenge $Q$, die nötig ist, um 2 kg Wasser von 20 °C auf 80 °C zu erwärmen. Nutze: $c_{\text{Wasser}} = 4200\,\frac{\text{J}}{\text{kg} \cdot \text{K}}$</div>
+    <textarea class="antwort-input gross" placeholder="Lösung mit Rechenweg …"></textarea>
+  </div>
+
+  <div class="aufgabe-block">
+    <div class="aufgabe-nr">Aufgabe B3</div>
+    <div class="aufgabe-text">Berechne, wie viel Wärme $Q$ benötigt wird, um 0,5 kg Eisen von 20 °C auf 120 °C zu erhitzen. Nutze: $c_{\text{Eisen}} = 450\,\frac{\text{J}}{\text{kg} \cdot \text{K}}$</div>
+    <textarea class="antwort-input gross" placeholder="Lösung mit Rechenweg …"></textarea>
+  </div>
+
+  <!-- PAUSE -->
+  <div class="pause-box">
+    <strong>Pause — 5 Minuten</strong>
+    Steh auf, streck dich, trink etwas. Dann geht's weiter mit Teil C.
+  </div>
+
+  <!-- ═══ ABSCHNITT C ═══ -->
+  <div class="section-header">
+    Teil C — Die drei Arten der Wärmeübertragung
+    <span class="section-time">ca. 25 Minuten</span>
+  </div>
+
+  <div class="erklaerung">
+    <p>Wärme kann auf drei verschiedene Arten von einem Ort zum anderen gelangen:</p>
+  </div>
+
+  <div class="erklaerung">
+    <p><strong>1. Wärmeleitung (Konduktion)</strong></p>
+    <p>Wärme wird durch direkten Kontakt weitergegeben — von Teilchen zu Teilchen. Das funktioniert vor allem in <strong>festen Stoffen</strong>. Metalle leiten Wärme sehr gut (gute Wärmeleiter), Holz oder Kunststoff schlecht (schlechte Wärmeleiter = Wärmeisolatoren).</p>
+    <div class="beispiel-box">
+      <div class="bsp-label">Beispiel</div>
+      Ein Metalllöffel in heißem Tee wird heiß — die Wärme leitet vom Tee durch das Metall bis zum Griff.
+    </div>
+  </div>
+
+  <div class="erklaerung">
+    <p><strong>2. Wärmeströmung (Konvektion)</strong></p>
+    <p>Wärme wird durch <strong>strömende Flüssigkeiten oder Gase</strong> transportiert. Warme Teile steigen auf (geringere Dichte), kältere sinken ab — so entsteht eine Strömung (Konvektionsströmung).</p>
+    <div class="beispiel-box">
+      <div class="bsp-label">Beispiel</div>
+      Eine Heizung wärmt die Luft direkt davor. Die warme Luft steigt auf, kühlt sich oben ab, sinkt wieder ab — es entsteht eine Luftzirkulation im Raum.
+    </div>
+  </div>
+
+  <div class="erklaerung">
+    <p><strong>3. Wärmestrahlung (Radiation)</strong></p>
+    <p>Wärme wird als elektromagnetische Strahlung (Infrarotstrahlung) abgegeben. Das Besondere: Wärmestrahlung braucht <strong>kein Material</strong> zum Transport — sie kann sich auch durch das Vakuum bewegen.</p>
+    <div class="beispiel-box">
+      <div class="bsp-label">Beispiel</div>
+      Die Sonne erwärmt die Erde, obwohl zwischen beiden das Vakuum des Weltalls liegt. Auch ein Heizkörper oder ein Feuer wärmt durch Strahlung, ohne dass du ihn berühren musst.
+    </div>
+  </div>
+
+  <div class="merke-box">
+    <div class="merke-label">Merke — Die drei Wärmeübertragungsarten</div>
+    <table style="width:100%; border-collapse: collapse; font-size: 10pt; margin-top: 6px;">
+      <tr>
+        <td style="padding: 4px 8px; font-weight: 700; width: 28%;">Leitung</td>
+        <td style="padding: 4px 8px;">durch feste Stoffe, Teilchen-zu-Teilchen-Kontakt</td>
+      </tr>
+      <tr>
+        <td style="padding: 4px 8px; font-weight: 700;">Strömung</td>
+        <td style="padding: 4px 8px;">durch Flüssigkeiten und Gase, Strömungsbewegung</td>
+      </tr>
+      <tr>
+        <td style="padding: 4px 8px; font-weight: 700;">Strahlung</td>
+        <td style="padding: 4px 8px;">als elektromagnetische Strahlung, auch durch Vakuum</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="aufgabe-block">
+    <div class="aufgabe-nr">Aufgabe C1 — Zuordnung</div>
+    <div class="aufgabe-text">Ordne jeder Situation die passende Art der Wärmeübertragung zu. Schreibe <em>Leitung</em>, <em>Strömung</em> oder <em>Strahlung</em> in die rechte Spalte.</div>
+    <table class="zuordnung-table">
+      <thead>
+        <tr>
+          <th>Situation</th>
+          <th>Art der Wärmeübertragung</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Du hältst eine heiße Tasse Kakao — der Henkel wird warm.</td>
+          <td contenteditable="true" style="min-height: 30px;"></td>
+        </tr>
+        <tr>
+          <td>Eine Heizungsanlage erwärmt die Luft im Zimmer über Luftzirkulation.</td>
+          <td contenteditable="true"></td>
+        </tr>
+        <tr>
+          <td>Die Sonne erwärmt deine Haut, auch wenn der Wind kalt ist.</td>
+          <td contenteditable="true"></td>
+        </tr>
+        <tr>
+          <td>Ein Suppentopf aus Metall leitet die Hitze der Herdplatte an den Topfinhalt weiter.</td>
+          <td contenteditable="true"></td>
+        </tr>
+        <tr>
+          <td>Warmes Wasser steigt in einem Behälter nach oben, kaltes sinkt ab.</td>
+          <td contenteditable="true"></td>
+        </tr>
+        <tr>
+          <td>Ein Lagerfeuer wärmt die Menschen im Umkreis, ohne direkten Kontakt.</td>
+          <td contenteditable="true"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="aufgabe-block">
+    <div class="aufgabe-nr">Aufgabe C2</div>
+    <div class="aufgabe-text">Erkläre, warum ein Metallstab schneller warm wird als ein Holzstab gleicher Länge, wenn man sie beide in eine heiße Flamme hält. Verwende dabei den Begriff <em>Wärmeleitung</em>.</div>
+    <textarea class="antwort-input gross" placeholder="Lösung mit Rechenweg …"></textarea>
+  </div>
+
+  <div class="aufgabe-block">
+    <div class="aufgabe-nr">Aufgabe C3</div>
+    <div class="aufgabe-text">Beschreibe, wie eine Heizung im Winter einen Raum erwärmt. Welche Art der Wärmeübertragung spielt die Hauptrolle? Begründe.</div>
+    <textarea class="antwort-input gross" placeholder="Lösung mit Rechenweg …"></textarea>
+  </div>
+
+  <!-- ═══ ABSCHNITT D ═══ -->
+  <div class="section-header">
+    Teil D — Anwendung und Transfer
+    <span class="section-time">ca. 15 Minuten</span>
+  </div>
+
+  <div class="aufgabe-block">
+    <div class="aufgabe-nr">Aufgabe D1</div>
+    <div class="aufgabe-text">Eine Thermosflasche hält Getränke lange warm. Erkläre, wie die Thermosflasche alle drei Arten der Wärmeübertragung reduziert.</div>
+    <div class="teilaufgaben">
+      <div class="teilaufgabe">
+        <div class="teilaufgabe-label">a)</div>
+        <textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea>
+      </div>
+      <div class="teilaufgabe">
+        <div class="teilaufgabe-label">b)</div>
+        <textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea>
+      </div>
+      <div class="teilaufgabe">
+        <div class="teilaufgabe-label">c)</div>
+        <textarea class="antwort-input" placeholder="Lösung mit Rechenweg …"></textarea>
+      </div>
+    </div>
+    <div class="erklaerung" style="font-size: 10pt; margin-top: 8px;">
+      Hinweis: Die Thermosflasche hat eine Doppelwand mit Vakuum dazwischen, verspiegelte Innenwände und eine schlechtwärmeleitende Umhüllung.
+    </div>
+  </div>
+
+  <div class="aufgabe-block">
+    <div class="aufgabe-nr">Aufgabe D2</div>
+    <div class="aufgabe-text">Vergleiche: Warum heizt sich ein schwarzes Auto im Sommer stärker auf als ein weißes Auto, obwohl beide in der gleichen Sonne stehen?</div>
+    <textarea class="antwort-input gross" placeholder="Lösung mit Rechenweg …"></textarea>
+  </div>
+
+  <!-- ═══ BONUS ═══ -->
+  <div class="bonus-header">Bonus — Freiwillig (für Schnelle)</div>
+
+  <div class="aufgabe-block">
+    <div class="aufgabe-nr">Bonus-Aufgabe</div>
+    <div class="aufgabe-text">Beurteile folgende Maßnahme zur Wärmedämmung eines Hauses:</div>
+    <div class="erklaerung">
+      Ein Haus wird mit Styropor-Platten (10 cm dick) an der Außenwand gedämmt. Styropor hat eine sehr geringe Wärmeleitfähigkeit. Die Eigentümer argumentieren: „Damit verlieren wir kaum noch Wärme." Ein Kritiker sagt: „Die Dachdämmung ist wichtiger, weil Wärme nach oben steigt."
+    </div>
+    <div class="aufgabe-text mt8">Wer hat Recht? Begründe deine Antwort unter Verwendung der drei Arten der Wärmeübertragung. [BNE]</div>
+    <textarea class="antwort-input xl" placeholder="Lösung mit Rechenweg …"></textarea>
+  </div>
+
+</div><!-- .page-card -->
+
+<!-- Footer -->
+<div class="footer-fixed">
+  <span>Physik &nbsp;·&nbsp; Klasse 8D &nbsp;·&nbsp; Heimarbeit</span>
+  <span>Rahmenplan MV &nbsp;·&nbsp; Wärmelehre &nbsp;·&nbsp; ca. 10 UStd.</span>
+</div>
+
+<!-- Speichern-Button -->
+<button class="speichern-btn" onclick="window.print()">Als PDF speichern</button>
+
+<script>
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: "$$", right: "$$", display: true},
+      {left: "$", right: "$", display: false}
+    ]
+  });
+</script>
+
+</body>
+</html>
