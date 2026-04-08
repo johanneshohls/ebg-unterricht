@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heimarbeit – Terme – Klasse 7D</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<style>
+  @page { size: A4; margin: 15mm 18mm; }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    font-size: 11pt;
+    line-height: 1.5;
+    color: #222;
+    background: #fff;
+  }
+
+  /* HINWEISBAND */
+  .hinweis-band {
+    background: #f0f0f0;
+    border: 1.5px solid #999;
+    padding: 8px 14px;
+    margin-bottom: 16px;
+    font-size: 10pt;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 0.3px;
+  }
+
+  /* HEADER */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 18px;
+    border-bottom: 2px solid #444;
+    padding-bottom: 10px;
+  }
+  .header-left { flex: 1; }
+  .header-meta {
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #555;
+    margin-bottom: 3px;
+  }
+  .header-title {
+    font-size: 21pt;
+    font-weight: 700;
+    color: #222;
+    line-height: 1.2;
+  }
+  .header-subtitle {
+    font-size: 10pt;
+    color: #666;
+    margin-top: 2px;
+  }
+  .header-right {
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #888;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    padding-left: 12px;
+  }
+
+  /* NAME/DATUM-ZEILE */
+  .name-zeile {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 16px;
+    font-size: 10pt;
+    border-bottom: 1px solid #bbb;
+    padding-bottom: 14px;
+  }
+  .name-zeile div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .name-linie {
+    display: inline-block;
+    border-bottom: 1px solid #444;
+    width: 160px;
+  }
+
+  /* ÜBERBLICK */
+  .overview { margin-bottom: 16px; }
+  .overview-label {
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #555;
+    margin-bottom: 5px;
+    font-weight: 600;
+  }
+  .overview table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10pt;
+  }
+  .overview th {
+    background: #666;
+    color: #fff;
+    padding: 5px 10px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .overview td {
+    padding: 6px 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  .overview tr:last-child td { border-bottom: none; }
+  .col-teil { width: 50px; text-align: center; font-weight: 600; }
+  .col-zeit { width: 90px; }
+  .col-seite { width: 40px; text-align: center; }
+
+  /* LERNZIELE */
+  .lernziele { margin-bottom: 20px; }
+  .lernziele-label {
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #555;
+    margin-bottom: 5px;
+    font-weight: 600;
+  }
+  .lernziele ul { list-style: none; padding: 0; }
+  .lernziele li { padding: 2px 0; font-size: 10pt; }
+  .lernziele li::before { content: "■ "; color: #555; font-size: 8pt; margin-right: 4px; }
+
+  /* SECTIONS */
+  .section-header {
+    display: flex;
+    align-items: center;
+    margin: 24px 0 14px 0;
+    page-break-after: avoid;
+  }
+  .section-letter {
+    background: #555;
+    color: #fff;
+    font-weight: 700;
+    font-size: 12pt;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+  .section-title { font-size: 13pt; font-weight: 700; color: #222; }
+  .section-zeit { font-size: 9pt; color: #666; margin-left: 10px; font-style: italic; }
+
+  /* ERKLÄRUNGEN */
+  .explanation { margin-bottom: 14px; page-break-inside: avoid; }
+  .explanation h3 { font-size: 11pt; font-weight: 700; color: #333; margin-bottom: 6px; }
+  .explanation p { margin-bottom: 6px; line-height: 1.6; }
+
+  .formula-display {
+    text-align: center;
+    font-size: 14pt;
+    font-weight: 700;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    background: #fafafa;
+  }
+
+  .merke {
+    border-left: 4px solid #555;
+    background: #f5f5f5;
+    padding: 10px 14px;
+    margin: 12px 0;
+    page-break-inside: avoid;
+  }
+  .merke-label {
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    color: #555;
+    margin-bottom: 3px;
+  }
+  .merke p { font-size: 10pt; line-height: 1.6; }
+
+  /* BEISPIEL-BOX */
+  .beispiel {
+    border: 1px solid #bbb;
+    background: #fafafa;
+    padding: 10px 14px;
+    margin: 10px 0;
+    page-break-inside: avoid;
+  }
+  .beispiel-label {
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    color: #666;
+    margin-bottom: 4px;
+  }
+
+  /* AUFGABEN */
+  .aufgabe {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 18px;
+    page-break-inside: avoid;
+  }
+  .aufgabe-nummer {
+    font-size: 15pt;
+    font-weight: 700;
+    color: #444;
+    min-width: 38px;
+    padding-top: 2px;
+    flex-shrink: 0;
+  }
+  .aufgabe-content { flex: 1; }
+  .aufgabe-text { margin-bottom: 6px; line-height: 1.6; }
+  .aufgabe-hinweis { font-size: 9pt; color: #666; margin-bottom: 6px; font-style: italic; }
+
+  .antwort-box {
+    border: 1px solid #ccc;
+    background: #fafafa;
+    min-height: 65px;
+    margin-top: 6px;
+  }
+  .antwort-box.gross { min-height: 100px; }
+  .antwort-box.klein { min-height: 40px; }
+  .antwort-box.xl { min-height: 130px; }
+
+  /* LÜCKENTABELLE */
+  .luecken-tabelle {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0;
+    font-size: 10pt;
+  }
+  .luecken-tabelle th {
+    background: #666;
+    color: #fff;
+    padding: 5px 10px;
+    text-align: center;
+    font-weight: 600;
+  }
+  .luecken-tabelle td {
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    text-align: center;
+    min-height: 30px;
+    min-width: 80px;
+  }
+
+  /* PAUSE */
+  .pause-box {
+    border: 2px dashed #999;
+    padding: 12px 16px;
+    margin: 22px 0;
+    text-align: center;
+    page-break-inside: avoid;
+  }
+  .pause-title { font-size: 13pt; font-weight: 700; color: #444; margin-bottom: 3px; }
+  .pause-text { font-size: 9pt; color: #666; }
+
+  /* BONUS */
+  .bonus { margin-top: 20px; page-break-inside: avoid; }
+  .bonus-label {
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    color: #555;
+    margin-bottom: 8px;
+  }
+
+  /* LÖSUNGSSEITE */
+  .loesungen { page-break-before: always; }
+  .loesungen h2 {
+    font-size: 16pt;
+    font-weight: 700;
+    margin-bottom: 6px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #444;
+  }
+  .loesungen .hinweis {
+    font-size: 9pt;
+    color: #666;
+    margin-bottom: 16px;
+    font-style: italic;
+  }
+  .loesung-item { margin-bottom: 10px; page-break-inside: avoid; }
+  .loesung-item .nummer { font-weight: 700; color: #444; }
+  .loesung-item .rechnung {
+    font-family: 'Courier New', monospace;
+    background: #f5f5f5;
+    padding: 5px 10px;
+    margin: 3px 0;
+    font-size: 10pt;
+    border-left: 3px solid #999;
+  }
+  .loesung-gruppe {
+    font-size: 9pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #555;
+    margin: 14px 0 6px 0;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 3px;
+  }
+
+  /* FOOTER */
+  .footer {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    text-align: center;
+    font-size: 7.5pt;
+    color: #999;
+    padding-top: 6px;
+    border-top: 1px solid #ddd;
+  }
+
+  @media print {
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .no-break { page-break-inside: avoid; }
+    .speichern-btn { display: none !important; }
+    textarea { border: 1px solid #ccc !important; background: #fafafa !important; resize: none; }
+    .name-input { border: none; border-bottom: 1px solid #444; background: transparent; }
+    [contenteditable] { border: none !important; background: transparent !important; }
+  }
+
+  /* SCREEN-MODUS */
+  @media screen {
+    body { max-width: 860px; margin: 0 auto; padding: 24px; background: #eee; }
+    .hinweis-band { position: sticky; top: 0; z-index: 100; }
+  }
+
+  /* EINGABEFELDER */
+  textarea.antwort-input {
+    width: 100%;
+    margin-top: 6px;
+    padding: 8px 10px;
+    border: 1.5px solid #bbb;
+    background: #fff;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 11pt;
+    line-height: 1.5;
+    resize: vertical;
+    color: #222;
+    box-sizing: border-box;
+  }
+  textarea.antwort-input:focus {
+    outline: none;
+    border-color: #555;
+    background: #fafffe;
+  }
+  textarea.antwort-input.klein { min-height: 50px; }
+  textarea.antwort-input.gross { min-height: 110px; }
+  textarea.antwort-input.xl   { min-height: 150px; }
+  textarea.antwort-input:not(.klein):not(.gross):not(.xl) { min-height: 75px; }
+
+  /* NAME/DATUM */
+  input.name-input {
+    border: none;
+    border-bottom: 1.5px solid #444;
+    background: transparent;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 11pt;
+    color: #222;
+    outline: none;
+    width: 160px;
+    padding: 2px 4px;
+  }
+  input.name-input:focus { border-bottom-color: #000; }
+
+  /* EDITIERBARE TABELLENZELLE */
+  td[contenteditable] {
+    background: #fff;
+    outline: none;
+  }
+  td[contenteditable]:focus {
+    background: #fafffe;
+    box-shadow: inset 0 0 0 1.5px #555;
+  }
+  td[contenteditable]:empty::before {
+    content: "…";
+    color: #ccc;
+  }
+
+  /* SPEICHERN-BUTTON */
+  .speichern-btn {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    background: #444;
+    color: #fff;
+    border: none;
+    padding: 14px 22px;
+    font-size: 11pt;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+    z-index: 200;
+  }
+  .speichern-btn:hover { background: #222; }
+
+  /* TEILAUFGABEN */
+  .teilaufgaben {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .teilaufgabe {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .teilaufgabe-label {
+    font-weight: 700;
+    font-size: 11pt;
+    min-width: 24px;
+    padding-top: 8px;
+    flex-shrink: 0;
+    color: #444;
+  }
+  .teilaufgabe textarea.antwort-input {
+    flex: 1;
+    margin-top: 0;
+    min-height: 50px;
+  }
+  @media print {
+    .teilaufgabe textarea.antwort-input { min-height: 45px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HINWEISBAND -->
+<div class="hinweis-band">
+  Dieses Blatt wird in der nächsten Stunde eingesammelt. — Bearbeite alle Aufgaben schriftlich, ohne Taschenrechner.
+</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <div class="header-meta">Mathematik · Klasse 7D · Heimarbeit</div>
+    <div class="header-title">Terme</div>
+    <div class="header-subtitle">Wiederholung · Terme auswerten · Terme aufstellen · Terme vereinfachen</div>
+  </div>
+  <div class="header-right">Heimarbeit</div>
+</div>
+
+<!-- NAME/DATUM -->
+<div class="name-zeile">
+  <div>Name: <input type="text" class="name-input" placeholder="Dein Name" style="width:200px"></div>
+  <div>Datum: <input type="text" class="name-input" placeholder="09.04.2026" style="width:120px"></div>
+</div>
+
+<!-- ÜBERBLICK -->
+<div class="overview">
+  <div class="overview-label">Ablauf — Halte dich an die Zeiten</div>
+  <table>
+    <thead>
+      <tr>
+        <th class="col-teil">Teil</th>
+        <th>Inhalt</th>
+        <th class="col-zeit">Dauer</th>
+        <th class="col-seite">S.</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="col-teil">A</td>
+        <td>Wiederholung lesen &amp; verstehen — Was ist ein Term?</td>
+        <td>ca. 15 Min</td>
+        <td class="col-seite">1</td>
+      </tr>
+      <tr>
+        <td class="col-teil">B</td>
+        <td>Terme auswerten — Wert einsetzen und berechnen</td>
+        <td>ca. 20 Min</td>
+        <td class="col-seite">1–2</td>
+      </tr>
+      <tr>
+        <td style="text-align:center; font-style:italic; color:#888">—</td>
+        <td style="font-style:italic; color:#888">Pause</td>
+        <td style="color:#888">5 Min</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td class="col-teil">C</td>
+        <td>Terme aufstellen — aus Alltagssituationen</td>
+        <td>ca. 20 Min</td>
+        <td class="col-seite">2–3</td>
+      </tr>
+      <tr>
+        <td class="col-teil">D</td>
+        <td>Terme vereinfachen — gleichartige Terme zusammenfassen</td>
+        <td>ca. 15 Min</td>
+        <td class="col-seite">3</td>
+      </tr>
+      <tr>
+        <td class="col-teil">+</td>
+        <td>Bonus (freiwillig, für alle die fertig sind)</td>
+        <td>offen</td>
+        <td class="col-seite">3</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- LERNZIELE -->
+<div class="lernziele">
+  <div class="lernziele-label">Das kannst du nach dieser Stunde</div>
+  <ul>
+    <li>Ich kann erklären, was ein Term, eine Variable und eine Konstante sind.</li>
+    <li>Ich kann den Wert eines Terms berechnen, wenn ich den Wert der Variablen kenne.</li>
+    <li>Ich kann zu einer Alltagssituation einen Term aufstellen.</li>
+    <li>Ich kann gleichartige Terme erkennen und zusammenfassen.</li>
+  </ul>
+</div>
+
+<!-- ============================
+     ABSCHNITT A — WIEDERHOLUNG
+     ============================ -->
+<div class="section-header">
+  <div class="section-letter">A</div>
+  <div class="section-title">Wiederholung — Was ist ein Term?</div>
+  <div class="section-zeit">ca. 15 Minuten</div>
+</div>
+
+<div class="explanation">
+  <h3>A1 Terme und ihre Bestandteile</h3>
+  <p>
+    Ein <strong>Term</strong> ist ein mathematischer Ausdruck, der aus Zahlen, Variablen und Rechenzeichen besteht.
+    Ein Term hat immer einen bestimmten Wert — sobald man weiß, für welche Zahl die Variable steht.
+  </p>
+  <p>
+    Eine <strong>Variable</strong> ist ein Buchstabe, der als Platzhalter für eine Zahl steht (z.&thinsp;B. $x$, $a$, $n$).
+    Eine <strong>Konstante</strong> ist eine feste Zahl im Term, die sich nicht ändert.
+  </p>
+
+  <div class="beispiel">
+    <div class="beispiel-label">Beispiele für Terme</div>
+    <p>
+      $3x + 5$ &nbsp;·&nbsp; $2a - 7$ &nbsp;·&nbsp; $4n$ &nbsp;·&nbsp; $2(x + 3)$ &nbsp;·&nbsp; $a + b$
+    </p>
+    <p style="margin-top: 6px; font-size:10pt; color:#444">
+      Im Term $3x + 5$: Die Variable ist $x$, die Konstante ist $5$, der Koeffizient von $x$ ist $3$.
+    </p>
+  </div>
+
+  <h3 style="margin-top: 12px">A2 Term auswerten — so geht es</h3>
+  <p>
+    Einen Term auswerten bedeutet: Man setzt für die Variable eine bestimmte Zahl ein und berechnet das Ergebnis.
+    Dabei gelten alle bekannten Rechenregeln (Punkt vor Strich, Klammern zuerst).
+  </p>
+
+  <div class="beispiel">
+    <div class="beispiel-label">Beispiel: Term auswerten</div>
+    <p>Term: $3x + 5$, gesucht: Wert für $x = 4$</p>
+    <p style="margin-top:4px">
+      $3 \cdot 4 + 5 = 12 + 5 = 17$
+    </p>
+    <p style="margin-top:6px">Term: $2(n - 1)$, gesucht: Wert für $n = 6$</p>
+    <p style="margin-top:4px">
+      $2 \cdot (6 - 1) = 2 \cdot 5 = 10$
+    </p>
+  </div>
+
+  <div class="merke">
+    <div class="merke-label">Merke</div>
+    <p>
+      Variable einsetzen → Klammern zuerst berechnen → dann Punkt vor Strich → Ergebnis aufschreiben.<br>
+      Schreibe immer den vollständigen Rechenweg auf — kein Kopfrechnen ohne Zwischenschritt!
+    </p>
+  </div>
+</div>
+
+<!-- ============================
+     ABSCHNITT B — TERME AUSWERTEN
+     ============================ -->
+<div class="section-header">
+  <div class="section-letter">B</div>
+  <div class="section-title">Terme auswerten</div>
+  <div class="section-zeit">ca. 20 Minuten · kein Taschenrechner</div>
+</div>
+
+<div class="aufgabe">
+  <div class="aufgabe-nummer">1</div>
+  <div class="aufgabe-content">
+    <div class="aufgabe-text">
+      Berechne den Wert der folgenden Terme. Schreibe jeden Schritt auf.<br>
+      <strong>a)</strong> $2x$ für $x = 3$ &emsp;
+      <strong>b)</strong> $5a$ für $a = 4$ &emsp;
+      <strong>c)</strong> $n + 7$ für $n = 5$
+    </div>
+    <div class="teilaufgaben">
+      <div class="teilaufgabe"><div class="teilaufgabe-label">a)</div><textarea class="antwort-input" placeholder="Rechenweg …"></textarea></div>
+      <div class="teilaufgabe"><div class="teilaufgabe-label">b)</div><textarea class="antwort-input" placeholder="Rechenweg …"></textarea></div>
+      <div class="teilaufgabe"><div class="teilaufgabe-label">c)</div><textarea class="antwort-input" placeholder="Rechenweg …"></textarea></div>
+    </div>
+  </div>
+</div>
+
+<div class="aufgabe">
+  <div class="aufgabe-nummer">2</div>
+  <div class="aufgabe-content">
+    <div class="aufgabe-text">
+      Berechne den Wert der folgenden Terme.<br>
+      <strong>a)</strong> $3x - 2$ für $x = 6$ &emsp;
+      <strong>b)</strong> $4n + 3$ für $n = 7$ &emsp;
+      <strong>c)</strong> $2a - 1$ für $a = 10$
+    </div>
+    <div class="teilaufgaben">
+      <div class="teilaufgabe"><div class="teilaufgabe-label">a)</div><textarea class="antwort-input" placeholder="Rechenweg …"></textarea></div>
+      <div class="teilaufgabe"><div class="teilaufgabe-label">b)</div><textarea class="antwort-input" placeholder="Rechenweg …"></textarea></div>
+      <div class="teilaufgabe"><div class="teilaufgabe-label">c)</div><textarea class="antwort-input" placeholder="Rechenweg …"></textarea></div>
+    </div>
+  </div>
+</div>
+
+<div class="aufgabe">
+  <div class="aufgabe-nummer">3</div>
+  <div class="aufgabe-content">
+    <div class="aufgabe-text">
+      Berechne den Wert der folgenden Terme. Achte auf die Klammern — die kommen zuerst!<br>
+      <strong>a)</strong> $2(x + 3)$ für $x = 4$ &emsp;
+      <strong>b)</strong> $3(n - 2)$ für $n = 5$ &emsp;
+      <strong>c)</strong> $4(a + 1)$ für $a = 2$
+    </div>
+    <div class="teilaufgaben">
+      <div class="teilaufgabe"><div class="teilaufgabe-label">a)</div><textarea class="antwort-input" placeholder="Rechenweg …"></textarea></div>
+      <div class="teilaufgabe"><div class="teilaufgabe-label">b)</div><textarea class="antwort-input" placeholder="Rechenweg …"></textarea></div>
+      <div class="teilaufgabe"><div class="teilaufgabe-label">c)</div><textarea class="antwort-input" placeholder="Rechenweg …"></textarea></div>
+    </div>
+  </div>
+</div>
+
+<div class="aufgabe">
+  <div class="aufgabe-nummer">4</div>
+  <div class="aufgabe-content">
+    <div class="aufgabe-text">
+      Berechne den Wert des Terms $3n$ für die angegebenen Werte. Trage die Ergebnisse in die Tabelle ein.
+    </div>
+    <table class="luecken-tabelle">
+      <thead>
+        <tr>
+          <th>$n$</th>
+          <th>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>10</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="font-weight:600; background:#f0f0f0">$3n$</td>
+          <td contenteditable="true"></td>
+          <td contenteditable="true"></td>
+          <td contenteditable="true"></td>
+          <td contenteditable="true"></td>
+          <td contenteditable="true"></td>
+          <td contenteditable="true"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="aufgabe">
+  <div class="aufgabe-nummer">5</div>
+  <div class="aufgabe-content">
+    <div class="aufgabe-text">
+      Berechne den Wert der folgenden Terme. Hier kommen negative Zahlen vor — Vorzeichen beachten!<br>
+      <strong>a)</strong> $x + 4$ für $x = -3$ &emsp;
+      <strong>b)</strong> $2a - 5$ für $a = 2$ &emsp;
+      <strong>c)</strong> $3n + 2$ für $n = -4$
+    </div>
+    <div class="aufgabe-hinweis">Hinweis: $(-3) + 4 = 1$ — negative Zahlen mit Klammern schreiben.</div>
+    <div class="teilaufgaben">
+      <div class="teilaufgabe"><div class="teilaufgabe-label">a)</div><textarea class="antwort-input" placeholder="Rechenweg …"></textarea></div>
+      <div class="teilaufgabe"><div class="teilaufgabe-label">b)</div><textarea class="antwort-input" placeholder="Rechenweg …"></textarea></div>
+      <div class="teilaufgabe"><div class="teilaufgabe-label">c)</div><textarea class="antwort-input" placeholder="Rechenweg …"></textarea></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================
+     PAUSE
+     ============================ -->
+<div class="pause-box">
+  <div class="pause-title">Pause — 5 Minuten</div>
+  <div class="pause-text">Stehe auf, streck dich, trinke etwas. Dann weiter mit Teil C.</div>
+</div>
+
+<!-- ============================
+     ABSCHNITT C — TERME AUFSTELLEN
+     ============================ -->
+<div class="section-header">
+  <div class="section-letter">C</div>
+  <div class="section-title">Terme aufstellen</div>
+  <div class="section-zeit">ca. 20 Minuten</div>
+</div>
+
+<div class="explanation">
+  <h3>C1 So stellst du einen Term auf</h3>
+  <p>
+    Einen Term aufstellen bedeutet: Du beschreibst eine Situation mit einem mathematischen Ausdruck.
+    Zuerst überlegst du, <strong>was sich ändert</strong> (das wird deine Variable) und <strong>was fest bleibt</strong> (das bleibt als Zahl im Term).
+  </p>
+
+  <div class="beispiel">
+    <div class="beispiel-label">Beispiel</div>
+    <p>Situation: Ein Schüler hat $n$ Stifte. Er kauft 5 weitere dazu.</p>
+    <p style="margin-top:4px">Term: $n + 5$</p>
+    <p style="margin-top:6px">Situation: Eine Packung enthält 8 Kekse. Es gibt $p$ Packungen.</p>
+    <p style="margin-top:4px">Term: $8 \cdot p$ &nbsp; (kurz: $8p$)</p>
+  </div>
+</div>
+
+<div class="aufgabe">
+  <div class="aufgabe-nummer">6</div>
+  <div class="aufgabe-content">
+    <div class="aufgabe-text">
+      Ein Buch kostet 9 Euro. Stelle einen Term auf für den Gesamtpreis von $n$ Büchern.
+    </div>
+    <div class="aufgabe-hinweis">Beantworte: Welche Größe ändert sich? Was bleibt fest?</div>
+    <textarea class="antwort-input klein" placeholder="Rechenweg hier eintippen …"></textarea>
+  </div>
+</div>
+
+<div class="aufgabe">
+  <div class="aufgabe-nummer">7</div>
+  <div class="aufgabe-content">
+    <div class="aufgabe-text">
+      Mia hat $m$ Euro Taschengeld. Sie gibt 4 Euro für ein Heft aus.
+      Stelle einen Term auf für ihr verbleibendes Geld.
+    </div>
+    <textarea class="antwort-input klein" placeholder="Rechenweg hier eintippen …"></textarea>
+  </div>
+</div>
+
+<div class="aufgabe">
+  <div class="aufgabe-nummer">8</div>
+  <div class="aufgabe-content">
+    <div class="aufgabe-text">
+      Ein Rechteck hat die Breite 6 cm und die Länge $l$ cm.
+      Stelle einen Term auf für den Umfang des Rechtecks.
+    </div>
+    <div class="aufgabe-hinweis">Hinweis: Umfang Rechteck = $2 \cdot (\text{Länge} + \text{Breite})$</div>
+    <textarea class="antwort-input klein" placeholder="Rechenweg hier eintippen …"></textarea>
+  </div>
+</div>
+
+<div class="aufgabe">
+  <div class="aufgabe-nummer">9</div>
+  <div class="aufgabe-content">
+    <div class="aufgabe-text">
+      Ein Zug fährt mit einer Geschwindigkeit von $v$ km/h. Er ist bereits 30 km gefahren.
+      Stelle einen Term auf für die Gesamtstrecke nach weiteren $t$ Stunden Fahrt.
+    </div>
+    <textarea class="antwort-input klein" placeholder="Rechenweg hier eintippen …"></textarea>
+  </div>
+</div>
+
+<div class="aufgabe">
+  <div class="aufgabe-nummer">10</div>
+  <div class="aufgabe-content">
+    <div class="aufgabe-text">
+      Leon und seine $n$ Freunde teilen sich die Kosten für eine Pizza. Die Pizza kostet 13 Euro.
+      Stelle einen Term auf für den Betrag, den jeder zahlen muss.
+    </div>
+    <div class="aufgabe-hinweis">Achtung: Wie viele Personen zahlen insgesamt? Leon <em>und</em> seine $n$ Freunde.</div>
+    <textarea class="antwort-input klein" placeholder="Rechenweg hier eintippen …"></textarea>
+  </div>
+</div>
+
+<div class="aufgabe">
+  <div class="aufgabe-nummer">11</div>
+  <div class="aufgabe-content">
+    <div class="aufgabe-text">
+      Erfinde selbst eine Alltagssituation, die durch den Term $5a + 3$ beschrieben werden kann.
+      Schreibe die Situation als vollständigen Satz auf und erkläre, wofür $a$ steht.
+    </div>
+    <textarea class="antwort-input gross" placeholder="Rechenweg hier eintippen …"></textarea>
+  </div>
+</div>
+
+<!-- ============================
+     ABSCHNITT D — TERME VEREINFACHEN
+     ============================ -->
+<div class="section-header">
+  <div class="section-letter">D</div>
+  <div class="section-title">Terme vereinfachen</div>
+  <div class="section-zeit">ca. 15 Minuten</div>
+</div>
+
+<div class="explanation">
+  <h3>D1 Gleichartige Terme zusammenfassen</h3>
+  <p>
+    Terme mit derselben Variablen heißen <strong>gleichartige Terme</strong>. Sie können zusammengefasst werden —
+    wie Äpfel und Äpfel addieren. Terme mit unterschiedlichen Variablen sind <strong>ungleichartig</strong> und
+    können <strong>nicht</strong> zusammengefasst werden.
+  </p>
+
+  <div class="beispiel">
+    <div class="beispiel-label">Beispiele</div>
+    <p>$3x + 2x = 5x$ &emsp; (beide haben Variable $x$ → addieren)</p>
+    <p style="margin-top:4px">$5a - 2a = 3a$ &emsp; (beide haben Variable $a$ → subtrahieren)</p>
+    <p style="margin-top:4px">$4x + 3y$ &emsp; (unterschiedliche Variablen → <em>nicht</em> zusammenfassen!)</p>
+    <p style="margin-top:4px">$2x + 5 + x = 3x + 5$ &emsp; (nur $x$-Terme zusammenfassen, Zahl bleibt)</p>
+  </div>
+
+  <div class="merke">
+    <div class="merke-label">Merke</div>
+    <p>
+      Nur Terme mit der <em>gleichen</em> Variablen können addiert oder subtrahiert werden.<br>
+      $3x + 2y$ bleibt so — das ist bereits vereinfacht!
+    </p>
+  </div>
+</div>
+
+<div class="aufgabe">
+  <div class="aufgabe-nummer">12</div>
+  <div class="aufgabe-content">
+    <div class="aufgabe-text">
+      Fasse zusammen, soweit möglich. Schreibe den vereinfachten Term auf.<br>
+      <strong>a)</strong> $3x + 2x$ &emsp;
+      <strong>b)</strong> $5a - 2a$ &emsp;
+      <strong>c)</strong> $4n + n$ &emsp;
+      <strong>d)</strong> $7b - 7b$
+    </div>
+    <div class="teilaufgaben">
+      <div class="teilaufgabe"><div class="teilaufgabe-label">a)</div><textarea class="antwort-input" placeholder="Ergebnis …"></textarea></div>
+      <div class="teilaufgabe"><div class="teilaufgabe-label">b)</div><textarea class="antwort-input" placeholder="Ergebnis …"></textarea></div>
+      <div class="teilaufgabe"><div class="teilaufgabe-label">c)</div><textarea class="antwort-input" placeholder="Ergebnis …"></textarea></div>
+      <div class="teilaufgabe"><div class="teilaufgabe-label">d)</div><textarea class="antwort-input" placeholder="Ergebnis …"></textarea></div>
+    </div>
+  </div>
+</div>
+
+<div class="aufgabe">
+  <div class="aufgabe-nummer">13</div>
+  <div class="aufgabe-content">
+    <div class="aufgabe-text">
+      Vereinfache die folgenden Terme. Achte darauf, welche Terme gleichartig sind.<br>
+      <strong>a)</strong> $2x + 3y + x$ &emsp;
+      <strong>b)</strong> $6a - 2a + 3b$ &emsp;
+      <strong>c)</strong> $4n + 2 + n + 5$
+    </div>
+    <div class="aufgabe-hinweis">Tipp: Unterstreiche zunächst alle gleichartigen Terme mit derselben Farbe (oder Stift).</div>
+    <div class="teilaufgaben">
+      <div class="teilaufgabe"><div class="teilaufgabe-label">a)</div><textarea class="antwort-input" placeholder="Vereinfachter Term …"></textarea></div>
+      <div class="teilaufgabe"><div class="teilaufgabe-label">b)</div><textarea class="antwort-input" placeholder="Vereinfachter Term …"></textarea></div>
+      <div class="teilaufgabe"><div class="teilaufgabe-label">c)</div><textarea class="antwort-input" placeholder="Vereinfachter Term …"></textarea></div>
+    </div>
+  </div>
+</div>
+
+<div class="aufgabe">
+  <div class="aufgabe-nummer">14</div>
+  <div class="aufgabe-content">
+    <div class="aufgabe-text">
+      Vereinfache und berechne dann den Wert des vereinfachten Terms für den angegebenen Wert.<br>
+      <strong>a)</strong> $4x + x$ für $x = 3$ &emsp;
+      <strong>b)</strong> $6a - 2a$ für $a = 5$
+    </div>
+    <div class="aufgabe-hinweis">Erst vereinfachen, dann Wert einsetzen!</div>
+    <div class="teilaufgaben">
+      <div class="teilaufgabe"><div class="teilaufgabe-label">a)</div><textarea class="antwort-input" placeholder="Rechenweg …"></textarea></div>
+      <div class="teilaufgabe"><div class="teilaufgabe-label">b)</div><textarea class="antwort-input" placeholder="Rechenweg …"></textarea></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================
+     BONUS
+     ============================ -->
+<div class="bonus">
+  <div class="bonus-label">Bonus · Für alle, die fertig sind</div>
+  <div class="aufgabe">
+    <div class="aufgabe-nummer">15</div>
+    <div class="aufgabe-content">
+      <div class="aufgabe-text">
+        Lisa denkt sich folgendes aus: „Ich nehme eine Zahl, verdopple sie, addiere 6 und teile das Ergebnis dann durch 2."
+        Stelle einen Term auf für Lisas Rechenvorgang (nenne die gedachte Zahl $x$).
+        Vereinfache den Term, wenn möglich, und erkläre auf Deutsch, was das Ergebnis bedeutet.
+      </div>
+      <textarea class="antwort-input xl" placeholder="Rechenweg hier eintippen …"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  Mathematik · Klasse 7D · Heimarbeit | Rahmenplan MV · Terme und Gleichungen (Klasse 7) · ca. 14 UStd.
+</div>
+
+<!-- SPEICHERN-BUTTON -->
+<button class="speichern-btn" onclick="window.print()">Als PDF speichern</button>
+
+<!-- KaTeX auto-render -->
+<script>
+  renderMathInElement(document.body, {
+    delimiters: [
+      {left: "$$", right: "$$", display: true},
+      {left: "$", right: "$", display: false}
+    ]
+  });
+</script>
+</body>
+</html>
