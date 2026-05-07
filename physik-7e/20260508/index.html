@@ -225,18 +225,21 @@ function draw(sFactor, nRampe) {
   const angle = Math.atan2(groundY2 - rampTopY, rampFootX - rampTopX) * 180 / Math.PI;
   drawStoneRotated(svg, stx, sty - 14, angle);
 
-  // Arbeiter SCHIEBEN den Stein die Rampe hinauf — sie stehen auf der Rampe
-  // unterhalb des Steins, Arme nach schräg oben zum Stein.
+  // Arbeiter SCHIEBEN den Stein die Rampe hinauf — sie stehen DIREKT HINTER
+  // dem Stein in einer Reihe, mit festem Abstand. Wenn die Anzahl sinkt, fällt
+  // immer der hinterste (links unten) weg — der vorderste bleibt am Stein.
   const dx = rampTopX - rampFootX;
   const dy = rampTopY - groundY2;
   const slopeLen = Math.sqrt(dx*dx + dy*dy);
-  const upX = dx / slopeLen;   // Einheitsvektor "die Rampe hinauf"
+  const upX = dx / slopeLen;
   const upY = dy / slopeLen;
-  const tStart = tStone + 0.07;   // direkt hinter dem Stein
-  const tEnd = 0.95;              // bis fast zum Rampenfuß
+  const slantSpacing = 30;        // Pixel zwischen zwei Arbeitern entlang der Rampe
+  const slantOffset = 22;         // erster Arbeiter direkt hinter dem Stein
+  const slantStone = tStone * slopeLen;
   for (let i = 0; i < nRampe; i++) {
-    const tt = nRampe === 1 ? (tStart + tEnd) / 2
-                            : tStart + (tEnd - tStart) * i / (nRampe - 1);
+    const slantDist = slantStone + slantOffset + i * slantSpacing;
+    const tt = slantDist / slopeLen;
+    if (tt > 0.97) break;         // wenn kein Platz mehr auf der Rampe ist
     const rx = rampTopX + (rampFootX - rampTopX) * tt;
     const ry = rampTopY + (groundY2 - rampTopY) * tt;
     drawPusher(svg, rx, ry, upX, upY);
