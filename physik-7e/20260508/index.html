@@ -81,6 +81,62 @@
   </div>
 </div>
 
+<!-- ============== SPIELBEREICH ============== -->
+<div class="panel" style="margin-top: 28px;">
+  <h2 style="margin: 0 0 6px 0; font-size: 22px;">Probier's selbst aus</h2>
+  <div class="sub" style="margin-bottom: 14px;">Verändere die drei Werte. Was bleibt eigentlich gleich?</div>
+
+  <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 28px; align-items: start;">
+    <div>
+      <svg id="stage3" viewBox="0 0 700 420"></svg>
+    </div>
+
+    <div>
+      <h3 style="margin: 0 0 8px 0; font-size: 17px;">Werte</h3>
+      <table style="width:100%; border-collapse: collapse; font-size: 16px;">
+        <tr><td style="padding:6px 10px; color:#555; border-bottom:1px solid #eee;">Hubhöhe h</td>
+            <td id="vH3" style="padding:6px 10px; text-align:right; font-variant-numeric:tabular-nums; font-weight:600; border-bottom:1px solid #eee;">—</td></tr>
+        <tr><td style="padding:6px 10px; color:#555; border-bottom:1px solid #eee;">Rampenlänge s</td>
+            <td id="vS3" style="padding:6px 10px; text-align:right; font-variant-numeric:tabular-nums; font-weight:600; border-bottom:1px solid #eee;">—</td></tr>
+        <tr><td style="padding:6px 10px; color:#555; border-bottom:1px solid #eee;">Gewichtskraft F<sub>G</sub></td>
+            <td id="vFG3" style="padding:6px 10px; text-align:right; font-variant-numeric:tabular-nums; font-weight:600; border-bottom:1px solid #eee;">—</td></tr>
+        <tr><td style="padding:6px 10px; color:#555; border-bottom:1px solid #eee;">Zugkraft F</td>
+            <td id="vF3" style="padding:6px 10px; text-align:right; font-variant-numeric:tabular-nums; font-weight:600; border-bottom:1px solid #eee;">—</td></tr>
+        <tr id="rowProd3" style="visibility:hidden;">
+          <td style="padding:10px; border-top:2px solid #111; font-size:18px;">Arbeit&nbsp;&nbsp;F · s</td>
+          <td id="vProd3" style="padding:10px; text-align:right; font-variant-numeric:tabular-nums; font-weight:600; border-top:2px solid #111; font-size:18px;">—</td>
+        </tr>
+      </table>
+
+      <div style="display:flex; flex-direction:column; gap:12px; margin-top:16px;">
+        <label style="display:flex; align-items:center; gap:10px; font-size:15px;">
+          <span style="width:130px;">Rampenlänge s</span>
+          <input type="range" id="sl3_S" min="1.5" max="6" step="0.1" value="3" style="flex:1;">
+          <span id="sl3_Sv" style="width:70px; text-align:right; font-variant-numeric:tabular-nums; font-weight:600;">3,0 m</span>
+        </label>
+        <label style="display:flex; align-items:center; gap:10px; font-size:15px;">
+          <span style="width:130px;">Hubhöhe h</span>
+          <input type="range" id="sl3_H" min="0.5" max="2" step="0.1" value="1.2" style="flex:1;">
+          <span id="sl3_Hv" style="width:70px; text-align:right; font-variant-numeric:tabular-nums; font-weight:600;">1,2 m</span>
+        </label>
+        <label style="display:flex; align-items:center; gap:10px; font-size:15px;">
+          <span style="width:130px;">Gewichtskraft F<sub>G</sub></span>
+          <input type="range" id="sl3_FG" min="50" max="500" step="10" value="200" style="flex:1;">
+          <span id="sl3_FGv" style="width:70px; text-align:right; font-variant-numeric:tabular-nums; font-weight:600;">200 N</span>
+        </label>
+        <label style="display:flex; align-items:center; gap:8px; font-size:15px; margin-top:4px;">
+          <input type="checkbox" id="sl3_showProd">
+          <span>Spalte „F · s" anzeigen</span>
+        </label>
+      </div>
+
+      <div style="margin-top:14px; padding:10px 12px; background:#f3f3f3; border-radius:6px; font-size:14px; color:#444;">
+        Tipp: Halte F<sub>G</sub> und h fest und verändere nur s. Was beobachtest du an F? Was an F · s?
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 const $ = (id) => document.getElementById(id);
 const SVG_NS = "http://www.w3.org/2000/svg";
@@ -284,12 +340,14 @@ function drawWorker(svg, x, groundY, facing) {
 }
 
 // =================== Primitive ===================
-function line(x1, y1, x2, y2, color="#111", width=1, dash=null) {
+function line(x1, y1, x2, y2, color="#111", width=1, dash=null, marker=null) {
   const l = document.createElementNS(SVG_NS, "line");
   l.setAttribute("x1", x1); l.setAttribute("y1", y1);
   l.setAttribute("x2", x2); l.setAttribute("y2", y2);
   l.setAttribute("stroke", color); l.setAttribute("stroke-width", width);
   if (dash) l.setAttribute("stroke-dasharray", dash.join(","));
+  if (marker === "arrow") l.setAttribute("marker-end", "url(#arr)");
+  if (marker === "arrowBoth") { l.setAttribute("marker-start", "url(#arr)"); l.setAttribute("marker-end", "url(#arr)"); }
   return l;
 }
 function poly(points, fill, stroke, sw) {
@@ -332,6 +390,99 @@ function arrowDouble(svg, x1, y1, x2, y2) {
 }
 
 update();
+
+// =================== SPIELBEREICH (Szene 3) ===================
+function fmt(num, digits=1) {
+  return num.toLocaleString("de-DE", { minimumFractionDigits: digits, maximumFractionDigits: digits });
+}
+
+["sl3_S","sl3_H","sl3_FG","sl3_showProd"].forEach(id => $(id).addEventListener("input", update3));
+
+function update3() {
+  let s = parseFloat($("sl3_S").value);
+  const h = parseFloat($("sl3_H").value);
+  const FG = parseFloat($("sl3_FG").value);
+  // s muss mindestens h sein (sonst ist die Rampe physikalisch nicht möglich)
+  if (s < h) s = h;
+  const F = FG * h / s;
+  $("sl3_Sv").textContent = fmt(s) + " m";
+  $("sl3_Hv").textContent = fmt(h) + " m";
+  $("sl3_FGv").textContent = Math.round(FG) + " N";
+  $("vH3").textContent = fmt(h) + " m";
+  $("vS3").textContent = fmt(s) + " m";
+  $("vFG3").textContent = Math.round(FG) + " N";
+  $("vF3").textContent = Math.round(F) + " N";
+  $("vProd3").textContent = Math.round(F * s) + " J";
+  $("rowProd3").style.visibility = $("sl3_showProd").checked ? "visible" : "hidden";
+  draw3(s, h, FG, F);
+}
+
+function draw3(s, h, FG, F) {
+  const svg = $("stage3");
+  svg.innerHTML = "";
+  defs(svg);
+
+  const groundY = 360;
+  const W = 700;
+  svg.appendChild(line(0, groundY, W, groundY, "#111", 1.5));
+
+  // Pyramide rechts. Höhe der Pyramide proportional zu h. h reicht von 0.5 bis 2 → 80–260 px.
+  const pyrH = 80 + (h - 0.5) * 120;   // 80–260
+  const pyrCx = W - 180;
+  const pyrW = 220;
+  drawPyramid(svg, pyrCx, groundY, pyrW, pyrH);
+
+  // Rampe geht vom Gipfel nach links unten. Länge in px: an h-Skalierung gekoppelt,
+  // s/h-Verhältnis bestimmt die Rampensteigung.
+  const ratio = s / h;
+  // Bildbreite begrenzen:
+  const rampLenPx = Math.min(440, ratio * pyrH);
+  const rampTopX = pyrCx;
+  const rampTopY = groundY - pyrH;
+  const rampFootX = rampTopX - rampLenPx;
+
+  svg.appendChild(poly(
+    [[rampTopX, rampTopY], [rampFootX, groundY], [rampTopX, groundY]],
+    "#f5f0e6", "#111", 2
+  ));
+  svg.appendChild(line(rampTopX, rampTopY, rampFootX, groundY, "#111", 2));
+
+  // Stein auf der Rampe (etwa Mitte)
+  const tStone = 0.5;
+  const stx = rampTopX + (rampFootX - rampTopX) * tStone;
+  const sty = rampTopY + (groundY - rampTopY) * tStone;
+  const angle = Math.atan2(groundY - rampTopY, rampFootX - rampTopX) * 180 / Math.PI;
+  drawStoneRotated(svg, stx, sty - 14, angle);
+
+  // Pfeil F an der Rampe (proportional zur Kraft)
+  const dx = rampTopX - rampFootX;
+  const dy = rampTopY - groundY;
+  const slopeLen = Math.sqrt(dx*dx + dy*dy);
+  const upX = dx / slopeLen, upY = dy / slopeLen;
+  const arrowLen = 30 + 50 * (F / 500); // 30–80 px je nach F
+  const ax = stx, ay = sty - 14;
+  svg.appendChild(line(ax, ay, ax + upX * arrowLen, ay + upY * arrowLen, "#c00", 2.5, null, "arrow"));
+  svg.appendChild(text(ax + upX * arrowLen + 6, ay + upY * arrowLen - 6,
+                       "F = " + Math.round(F) + " N", 13, "start", "#c00", true));
+
+  // F_G-Pfeil (senkrecht nach unten)
+  svg.appendChild(line(stx, sty - 14, stx, sty - 14 + 36, "#06a", 2.5, null, "arrow"));
+  svg.appendChild(text(stx + 6, sty + 16, "F_G = " + Math.round(FG) + " N", 12, "start", "#06a"));
+
+  // h-Markierung rechts der Pyramide
+  svg.appendChild(arrowDouble(svg, pyrCx + pyrW/2 + 14, groundY, pyrCx + pyrW/2 + 14, rampTopY));
+  svg.appendChild(text(pyrCx + pyrW/2 + 22, (groundY + rampTopY)/2 + 4, "h = " + fmt(h) + " m", 13));
+
+  // s-Markierung schräg entlang der Rampe (etwas unterhalb)
+  const offX = upY * 14, offY = -upX * 14; // senkrecht zur Rampe nach unten/außen
+  svg.appendChild(line(rampFootX + offX, groundY + offY, rampTopX + offX, rampTopY + offY,
+                       "#111", 1.2, null, "arrowBoth"));
+  const sMidX = (rampFootX + rampTopX)/2 + offX*1.6;
+  const sMidY = (groundY + rampTopY)/2 + offY*1.6;
+  svg.appendChild(text(sMidX, sMidY, "s = " + fmt(s) + " m", 13, "middle"));
+}
+
+update3();
 </script>
 
 </body>
