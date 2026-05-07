@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Pyramidenbau — Stein auf die Pyramide</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    margin: 0;
+    padding: 24px;
+    background: #fafafa;
+    color: #111;
+  }
+  h1 {
+    margin: 0 0 6px 0;
+    font-size: 28px;
+    font-weight: 600;
+  }
+  .sub { color: #666; margin-bottom: 18px; font-size: 16px; }
+  .panel {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 18px 24px;
+    max-width: 1200px;
+  }
+  svg { width: 100%; height: auto; display: block; background: #fff; }
+  .controls {
+    margin-top: 18px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  label.slider-row { display: flex; align-items: center; gap: 12px; font-size: 16px; }
+  label.slider-row input[type="range"] { width: 280px; }
+  .countbox {
+    display: inline-flex;
+    gap: 36px;
+    font-size: 17px;
+    margin-left: auto;
+  }
+  .countbox b {
+    font-size: 24px;
+    font-variant-numeric: tabular-nums;
+  }
+  .question {
+    margin-top: 18px;
+    padding: 14px 18px;
+    background: #f3f3f3;
+    border-radius: 6px;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<h1>Pyramidenbau — wie kriegt man den Stein nach oben?</h1>
+<div class="sub">Verschiebe den Regler. Was beobachtest du?</div>
+
+<div class="panel">
+  <svg id="stage" viewBox="0 0 1200 780"></svg>
+
+  <div class="controls">
+    <label class="slider-row">
+      <span>Rampenlänge</span>
+      <input type="range" id="slS" min="1" max="6" step="0.1" value="1.5">
+      <span id="slSv" style="width:90px; text-align:right; font-variant-numeric: tabular-nums; font-weight:600;">1,5×</span>
+    </label>
+    <div class="countbox">
+      <span>direkt hochziehen: <b id="nDirekt">—</b> Arbeiter</span>
+      <span>über die Rampe: <b id="nRampe">—</b> Arbeiter</span>
+    </div>
+  </div>
+
+  <div class="question">
+    <strong>Beobachtung:</strong> Auf der Rampe brauchen wir weniger Arbeiter, um denselben Stein nach oben zu bringen.<br>
+    <strong>Frage:</strong> Wenn die Rampe lange wird, brauchen wir immer weniger Arbeiter — kommt der Stein dann irgendwann „umsonst" nach oben? Was bezahlen wir dafür?
+  </div>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const SVG_NS = "http://www.w3.org/2000/svg";
+
+const N_DIRECT = 8;
+
+$("slS").addEventListener("input", update);
+
+function update() {
+  const sFactor = parseFloat($("slS").value);
+  $("slSv").textContent = sFactor.toFixed(1).replace(".", ",") + "×";
+  const nRampe = Math.max(1, Math.ceil(N_DIRECT / sFactor));
+  $("nDirekt").textContent = N_DIRECT;
+  $("nRampe").textContent = nRampe;
+  draw(sFactor, nRampe);
+}
+
+function draw(sFactor, nRampe) {
+  const svg = $("stage");
+  svg.innerHTML = "";
+  defs(svg);
+
+  // ============== OBERE SZENE: Direkt hochziehen ==============
+  const groundY1 = 340;
+  // Bodenlinie oben
+  svg.appendChild(line(0, groundY1, 1200, groundY1, "#111", 1.5));
+
+  const pyrCx1 = 700, pyrW1 = 240, pyrH1 = 200;
+  drawTitle(svg, pyrCx1, 30, "Direkt hochziehen");
+  drawPyramid(svg, pyrCx1, groundY1, pyrW1, pyrH1);
+
+  // Galgen senkrecht über der Spitze
+  const peakX1 = pyrCx1, peakY1 = groundY1 - pyrH1;
+  const galgenTopY = 60;
+  svg.appendChild(line(peakX1, peakY1, peakX1, galgenTopY, "#666", 1, [4,3]));
+
+  // Stein schwebt über der Spitze
+  const steinY = groundY1 - 110;
+  drawStone(svg, peakX1, steinY);
+
+  // Seil: Stein → Galgen → links abknicken → runter zu Arbeitern
+  // Anchor weit genug links, damit 8 Männchen Platz haben
+  const ropeAnchorX1 = 440;
+  svg.appendChild(line(peakX1, steinY - 15, peakX1, galgenTopY, "#111", 2));
+  svg.appendChild(line(peakX1, galgenTopY, ropeAnchorX1, galgenTopY, "#111", 2));
+  svg.appendChild(line(ropeAnchorX1, galgenTopY, ropeAnchorX1, groundY1 - 30, "#111", 2));
+
+  // 8 Arbeiter links vom Seilende
+  drawWorkerRow(svg, ropeAnchorX1 - 4, groundY1, N_DIRECT, "left");
+
+  // h-Markierung rechts der Pyramide
+  svg.appendChild(arrowDouble(svg, pyrCx1 + pyrW1/2 + 18, groundY1, pyrCx1 + pyrW1/2 + 18, peakY1));
+  svg.appendChild(text(pyrCx1 + pyrW1/2 + 26, (groundY1 + peakY1) / 2 + 4, "h", 16));
+
+  // ============== TRENNLINIE (horizontal) ==============
+  svg.appendChild(line(60, 400, 1140, 400, "#bbb", 1, [6,6]));
+
+  // ============== UNTERE SZENE: Über die Rampe (gespiegelt) ==============
+  const groundY2 = 720;
+  svg.appendChild(line(0, groundY2, 1200, groundY2, "#111", 1.5));
+
+  // Pyramide direkt unter der oberen
+  const pyrCx2 = pyrCx1, pyrW2 = pyrW1, pyrH2 = pyrH1;
+  drawTitle(svg, pyrCx2, 440, "Über die Rampe");
+  drawPyramid(svg, pyrCx2, groundY2, pyrW2, pyrH2);
+
+  const rampTopX = pyrCx2;
+  const rampTopY = groundY2 - pyrH2;
+  // Rampe geht NACH LINKS UNTEN (gespiegelt). Skalierung so, dass Arbeiter bei
+  // sFactor=1.5 direkt unter den oberen Arbeitern stehen. Cap, damit bei großen
+  // sFactor nichts aus dem Bild rutscht.
+  const rampLenPx = Math.min(580, sFactor * 156);
+  const rampFootX = rampTopX - rampLenPx;
+
+  // Rampe als Dreieck (Hypotenuse = Schräge nach links)
+  svg.appendChild(poly(
+    [[rampTopX, rampTopY], [rampFootX, groundY2], [rampTopX, groundY2]],
+    "#f5f0e6", "#111", 2
+  ));
+  svg.appendChild(line(rampTopX, rampTopY, rampFootX, groundY2, "#111", 2));
+
+  // Stein auf Rampe
+  const tStone = 0.55;
+  const stx = rampTopX + (rampFootX - rampTopX) * tStone;
+  const sty = rampTopY + (groundY2 - rampTopY) * tStone;
+  const angle = Math.atan2(groundY2 - rampTopY, rampFootX - rampTopX) * 180 / Math.PI;
+  drawStoneRotated(svg, stx, sty - 14, angle);
+
+  // Arbeiter stehen auf dem Boden LINKS vom Rampenfuß
+  const ropeFootX = rampFootX;
+  const ropeFootY = groundY2 - 4;
+  // Seil vom Stein die Rampe hinunter zum Fuß
+  svg.appendChild(line(stx, sty - 14, ropeFootX, ropeFootY, "#111", 2));
+  // Seil vom Rampenfuß horizontal nach links zu den Arbeitern
+  const workerAnchor2 = rampFootX - 30;
+  svg.appendChild(line(ropeFootX, ropeFootY, workerAnchor2 + 4, groundY2 - 30, "#111", 2));
+  // Arbeiter links vom Seilende, gehen weiter nach links
+  drawWorkerRow(svg, workerAnchor2 + 4, groundY2, nRampe, "left");
+
+  // h-Markierung RECHTS der Pyramide (gleiche Position wie oben → vertikal aligned)
+  svg.appendChild(arrowDouble(svg, pyrCx2 + pyrW2/2 + 18, groundY2, pyrCx2 + pyrW2/2 + 18, rampTopY));
+  svg.appendChild(text(pyrCx2 + pyrW2/2 + 26, (groundY2 + rampTopY)/2 + 4, "h", 16));
+
+  // s-Markierung unter der Rampe
+  svg.appendChild(arrowDouble(svg, rampFootX, groundY2 + 22, rampTopX, groundY2 + 22));
+  svg.appendChild(text((rampTopX + rampFootX)/2, groundY2 + 38, "s", 16, "middle"));
+}
+
+// =================== Bausteine ===================
+
+function defs(svg) {
+  const d = document.createElementNS(SVG_NS, "defs");
+  const m = document.createElementNS(SVG_NS, "marker");
+  m.setAttribute("id", "arr");
+  m.setAttribute("viewBox", "0 0 10 10");
+  m.setAttribute("refX", "9"); m.setAttribute("refY", "5");
+  m.setAttribute("markerWidth", "7"); m.setAttribute("markerHeight", "7");
+  m.setAttribute("orient", "auto-start-reverse");
+  const p = document.createElementNS(SVG_NS, "path");
+  p.setAttribute("d", "M 0 0 L 10 5 L 0 10 z"); p.setAttribute("fill", "#111");
+  m.appendChild(p); d.appendChild(m); svg.appendChild(d);
+}
+
+function drawTitle(svg, cx, y, str) {
+  svg.appendChild(text(cx, y, str, 18, "middle", "#111", true));
+}
+
+function drawPyramid(svg, cx, baseY, width, height) {
+  const left = cx - width / 2, right = cx + width / 2, top = baseY - height;
+  svg.appendChild(poly([[left, baseY], [right, baseY], [cx, top]], "#f0e9d6", "#111", 2));
+  for (let i = 1; i < 6; i++) {
+    const y = baseY - (height * i) / 6;
+    const xL = cx - (width / 2) * (1 - i/6);
+    const xR = cx + (width / 2) * (1 - i/6);
+    svg.appendChild(line(xL, y, xR, y, "#a99", 0.8));
+  }
+}
+
+function drawStone(svg, cx, cy) {
+  const w = 38, h = 26;
+  svg.appendChild(rect(cx - w/2, cy - h/2, w, h, "#cfc7b4", "#111", 2));
+  svg.appendChild(line(cx, cy - h/2, cx, cy - h/2 - 6, "#111", 2));
+}
+
+function drawStoneRotated(svg, cx, cy, angleDeg) {
+  const w = 38, h = 26;
+  const r = rect(cx - w/2, cy - h/2, w, h, "#cfc7b4", "#111", 2);
+  r.setAttribute("transform", `rotate(${angleDeg} ${cx} ${cy})`);
+  svg.appendChild(r);
+}
+
+function drawWorkerRow(svg, anchorX, groundY, n, side) {
+  const spacing = 22;
+  for (let i = 0; i < n; i++) {
+    const dir = side === "left" ? -1 : 1;
+    const x = anchorX + dir * (i + 1) * spacing;
+    drawWorker(svg, x, groundY, dir);
+  }
+}
+
+function drawWorker(svg, x, groundY, facing) {
+  const headR = 5;
+  const bodyTop = groundY - 30;
+  const bodyBot = groundY - 14;
+  svg.appendChild(circle(x, bodyTop - headR - 1, headR, "#fff", "#111", 1.4));
+  svg.appendChild(line(x, bodyTop, x, bodyBot, "#111", 1.6));
+  svg.appendChild(line(x, bodyBot, x - 4, groundY, "#111", 1.6));
+  svg.appendChild(line(x, bodyBot, x + 4, groundY, "#111", 1.6));
+  const armX = x - facing * 6;
+  const armY = bodyTop + 4;
+  svg.appendChild(line(x, bodyTop + 2, armX, armY, "#111", 1.6));
+  svg.appendChild(line(x, bodyTop + 5, armX, armY + 3, "#111", 1.6));
+}
+
+// =================== Primitive ===================
+function line(x1, y1, x2, y2, color="#111", width=1, dash=null) {
+  const l = document.createElementNS(SVG_NS, "line");
+  l.setAttribute("x1", x1); l.setAttribute("y1", y1);
+  l.setAttribute("x2", x2); l.setAttribute("y2", y2);
+  l.setAttribute("stroke", color); l.setAttribute("stroke-width", width);
+  if (dash) l.setAttribute("stroke-dasharray", dash.join(","));
+  return l;
+}
+function poly(points, fill, stroke, sw) {
+  const p = document.createElementNS(SVG_NS, "polygon");
+  p.setAttribute("points", points.map(([a,b]) => `${a},${b}`).join(" "));
+  p.setAttribute("fill", fill); p.setAttribute("stroke", stroke);
+  p.setAttribute("stroke-width", sw);
+  return p;
+}
+function rect(x, y, w, h, fill, stroke, sw) {
+  const r = document.createElementNS(SVG_NS, "rect");
+  r.setAttribute("x", x); r.setAttribute("y", y);
+  r.setAttribute("width", w); r.setAttribute("height", h);
+  r.setAttribute("fill", fill); r.setAttribute("stroke", stroke);
+  r.setAttribute("stroke-width", sw);
+  return r;
+}
+function circle(cx, cy, r, fill, stroke, sw) {
+  const c = document.createElementNS(SVG_NS, "circle");
+  c.setAttribute("cx", cx); c.setAttribute("cy", cy); c.setAttribute("r", r);
+  c.setAttribute("fill", fill); c.setAttribute("stroke", stroke);
+  c.setAttribute("stroke-width", sw);
+  return c;
+}
+function text(x, y, str, size=14, anchor="start", color="#111", bold=false) {
+  const t = document.createElementNS(SVG_NS, "text");
+  t.setAttribute("x", x); t.setAttribute("y", y);
+  t.setAttribute("font-size", size);
+  t.setAttribute("text-anchor", anchor);
+  t.setAttribute("fill", color);
+  if (bold) t.setAttribute("font-weight", "600");
+  t.textContent = str;
+  return t;
+}
+function arrowDouble(svg, x1, y1, x2, y2) {
+  const l = line(x1, y1, x2, y2, "#111", 1.2);
+  l.setAttribute("marker-start", "url(#arr)");
+  l.setAttribute("marker-end", "url(#arr)");
+  return l;
+}
+
+update();
+</script>
+
+</body>
+</html>
