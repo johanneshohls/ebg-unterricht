@@ -162,23 +162,29 @@ function draw(sFactor, nRampe) {
   ));
   svg.appendChild(line(rampTopX, rampTopY, rampFootX, groundY2, "#111", 2));
 
-  // Stein auf Rampe
-  const tStone = 0.55;
+  // Stein auf Rampe (etwas oberhalb der Mitte, damit unterhalb Platz für die Arbeiter ist)
+  const tStone = 0.35;
   const stx = rampTopX + (rampFootX - rampTopX) * tStone;
   const sty = rampTopY + (groundY2 - rampTopY) * tStone;
   const angle = Math.atan2(groundY2 - rampTopY, rampFootX - rampTopX) * 180 / Math.PI;
   drawStoneRotated(svg, stx, sty - 14, angle);
 
-  // Arbeiter stehen auf dem Boden LINKS vom Rampenfuß
-  const ropeFootX = rampFootX;
-  const ropeFootY = groundY2 - 4;
-  // Seil vom Stein die Rampe hinunter zum Fuß
-  svg.appendChild(line(stx, sty - 14, ropeFootX, ropeFootY, "#111", 2));
-  // Seil vom Rampenfuß horizontal nach links zu den Arbeitern
-  const workerAnchor2 = rampFootX - 30;
-  svg.appendChild(line(ropeFootX, ropeFootY, workerAnchor2 + 4, groundY2 - 30, "#111", 2));
-  // Arbeiter links vom Seilende, gehen weiter nach links
-  drawWorkerRow(svg, workerAnchor2 + 4, groundY2, nRampe, "left");
+  // Arbeiter SCHIEBEN den Stein die Rampe hinauf — sie stehen auf der Rampe
+  // unterhalb des Steins, Arme nach schräg oben zum Stein.
+  const dx = rampTopX - rampFootX;
+  const dy = rampTopY - groundY2;
+  const slopeLen = Math.sqrt(dx*dx + dy*dy);
+  const upX = dx / slopeLen;   // Einheitsvektor "die Rampe hinauf"
+  const upY = dy / slopeLen;
+  const tStart = tStone + 0.07;   // direkt hinter dem Stein
+  const tEnd = 0.95;              // bis fast zum Rampenfuß
+  for (let i = 0; i < nRampe; i++) {
+    const tt = nRampe === 1 ? (tStart + tEnd) / 2
+                            : tStart + (tEnd - tStart) * i / (nRampe - 1);
+    const rx = rampTopX + (rampFootX - rampTopX) * tt;
+    const ry = rampTopY + (groundY2 - rampTopY) * tt;
+    drawPusher(svg, rx, ry, upX, upY);
+  }
 
   // h-Markierung RECHTS der Pyramide (gleiche Position wie oben → vertikal aligned)
   svg.appendChild(arrowDouble(svg, pyrCx2 + pyrW2/2 + 18, groundY2, pyrCx2 + pyrW2/2 + 18, rampTopY));
@@ -239,6 +245,28 @@ function drawWorkerRow(svg, anchorX, groundY, n, side) {
     const x = anchorX + dir * (i + 1) * spacing;
     drawWorker(svg, x, groundY, dir);
   }
+}
+
+function drawPusher(svg, footX, footY, upX, upY) {
+  // Strichmännchen auf der Rampe, schiebt den Stein die Rampe hinauf.
+  // Füße auf der Rampenoberfläche, Körper aufrecht, Arme schräg nach oben in
+  // Rampenrichtung (Richtung Stein).
+  const headR = 5;
+  const bodyTop = footY - 30;
+  const bodyBot = footY - 14;
+  // Kopf
+  svg.appendChild(circle(footX, bodyTop - headR - 1, headR, "#fff", "#111", 1.4));
+  // Körper aufrecht
+  svg.appendChild(line(footX, bodyTop, footX, bodyBot, "#111", 1.6));
+  // Beine
+  svg.appendChild(line(footX, bodyBot, footX - 4, footY, "#111", 1.6));
+  svg.appendChild(line(footX, bodyBot, footX + 4, footY, "#111", 1.6));
+  // Arme entlang der Rampe nach oben (Richtung Stein)
+  const armLen = 14;
+  const handX = footX + upX * armLen;
+  const handY = bodyTop + 2 + upY * armLen;
+  svg.appendChild(line(footX, bodyTop + 2, handX, handY, "#111", 1.6));
+  svg.appendChild(line(footX, bodyTop + 5, handX, handY + 3, "#111", 1.6));
 }
 
 function drawWorker(svg, x, groundY, facing) {
