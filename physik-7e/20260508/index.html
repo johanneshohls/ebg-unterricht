@@ -438,10 +438,10 @@ function draw3(s, h, FG, F) {
   // Rampe geht vom Gipfel nach links unten. Länge in px: an h-Skalierung gekoppelt,
   // s/h-Verhältnis bestimmt die Rampensteigung.
   const ratio = s / h;
-  // Bildbreite begrenzen:
-  const rampLenPx = Math.min(440, ratio * pyrH);
   const rampTopX = pyrCx;
   const rampTopY = groundY - pyrH;
+  // Rampe darf nicht über den linken Bildrand hinausragen:
+  const rampLenPx = Math.min(rampTopX - 30, ratio * pyrH);
   const rampFootX = rampTopX - rampLenPx;
 
   svg.appendChild(poly(
